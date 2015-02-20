@@ -34,14 +34,20 @@ Entangled is needed in three parts of your app. Given the example of a `Messages
 Add the following to your routes file:
 
 ```ruby
+sockets_for :messages
+```
+
+Replace `messages` with your resource name.
+
+Under the hood, this creates the following routes:
+
+```ruby
 get '/messages', to: 'messages#index', as: :messages
 get '/messages/create', to: 'messages#create', as: :create_message
 get '/messages/:id', to: 'messages#show', as: :message
 get '/messages/:id/destroy', to: 'messages#destroy', as: :destroy_message
 get '/messages/:id/update', to: 'messages#update', as: :update_message
 ```
-
-Replace `messages` with your resource name.
 
 Note that Websockets don't speak HTTP, so only GET requests are available. That's why these routes deviate slightly from restful routes. Also note that there are no `edit` and `new` actions, since an Entangled controller is only concerned with rendering data, not views.
 
