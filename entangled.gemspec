@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency 'rspec-rails', '~> 3.2'
   spec.add_development_dependency 'sqlite3'
+  spec.add_development_dependency 'byebug'
   spec.add_dependency 'tubesock', '~> 0.2'
   spec.add_dependency 'rails', '~> 4.2'
 end
