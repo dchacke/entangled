@@ -1,4 +1,5 @@
 require 'tubesock'
+require 'tubesock/hijack'
 
 module Entangled
   module Controller
