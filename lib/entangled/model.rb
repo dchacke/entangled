@@ -3,7 +3,6 @@ module Entangled
     module ClassMethods
       # Create after_ callbacks for options
       def entangle(options = {})
-
         # If :only is specified, the options can either
         # be an array or a symbol
         if options[:only].present?
@@ -24,7 +23,6 @@ module Entangled
         # Instead of :only, :except can be specified; similarly,
         # the options can either be an array or a symbol
         elsif options[:except].present?
-
           # If it is a symbol, it has to be taken out of the default
           # options. A callback has to be defined for each of the
           # remaining options
