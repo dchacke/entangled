@@ -74,7 +74,7 @@ By default, the following callbacks will be added:
 - `after_update`
 - `after_destroy`
 
-You can limit this behavior by specifying `:only` or `:except` options:
+You can limit this behavior by specifying `:only` or `:except` options. For example, if you don't want to propagate the destruction or update of an object to all connected clients, you can do the following:
 
 ```ruby
 entangle only: :create # or use an array
