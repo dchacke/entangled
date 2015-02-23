@@ -14,7 +14,7 @@ gem 'entangled'
 
 Note that Redis and Puma are required as well. Redis is needed to build the channels clients subscribe to, Puma is needed to handle websockets concurrently.
 
-Redis comes with Entangled, but you need to add Puma to your Gemfile:
+Entangled comes with Redis, but you need to add Puma to your Gemfile:
 
 ```ruby
 gem 'puma'
