@@ -63,10 +63,10 @@ module Entangled
 
       # Creates callbacks in the extented model
       def create_hook(name)
-        send :"after_#{name}", proc { publish(name) }
+        send :"after_#{name}", -> { publish(name) }
       end
     end
-    
+
     module InstanceMethods
       private
 
@@ -74,12 +74,14 @@ module Entangled
       # to the model's channel or the record's channel
       # gets the message
       def publish(action)
-        Redis.new.publish(
+        redis = Redis.new
+
+        redis.publish(
           self.class.inferred_channel_name,
           json(action)
         )
 
-        Redis.new.publish(
+        redis.publish(
           inferred_channel_name_for_single_record,
           json(action)
         )
@@ -91,7 +93,7 @@ module Entangled
       # DeliciousTaco with the id 1, the inferred channel
       # name for the single record is "delicious_tacos/1"
       def inferred_channel_name_for_single_record
-        "#{self.class.inferred_channel_name}/#{id}"
+        "#{self.class.inferred_channel_name}/#{to_param}"
       end
 
       # JSON containing the type of action (:create, :update
