@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Inclusion/exclusion' do
+RSpec.describe 'Inclusion/exclusion', type: :model do
   let(:stub_redis) do
     mock("redis").tap do |redis|
       redis.stubs(:publish)
