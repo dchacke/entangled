@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe "Inclusion/exclusion", type: :routing do
+RSpec.describe 'Inclusion/exclusion', type: :routing do
   before(:context) do
     # Create arbitrary controllers here rather than
     # having a separate file for each in app/controllers
