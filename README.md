@@ -68,6 +68,18 @@ end
 
 This will create the callbacks needed to push changes to data to all clients who are subscribed. This is essentially where the data binding is set up.
 
+By default, the following callbacks will be added:
+
+- `after_create`
+- `after_update`
+- `after_destroy`
+
+You can limit this behavior by specifying `:only` or `:except` options:
+
+```ruby
+entangle only: :create # or use an array
+```
+
 ### Controllers
 Your controllers will be a little more lightweight than in a standard restful Rails app. A restful-style controller is expected and should look like this:
 
