@@ -133,7 +133,8 @@ Note the following:
 - Data sent to clients arrives as stringified JSON
 - Strong parameters are expected
 
-## Server
+### Server
+
 Remember to run Redis whenever you run your server:
 
 ```shell
@@ -145,10 +146,10 @@ Otherwise the channels won't work.
 ### Database
 Depending on your app's settings, you might have to increase the pool size in your database.yml configuration file, since every new socket will open a new connection to your database.
 
-### The Client
+## The Client
 You will need to configure your client to create Websockets and understand incoming requests on those sockets. If you use Angular for your frontend, you can use the Angular library from this repository. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
 
-#### Installation
+### Installation
 You can either download or reference the file `entangled.js` from this repository, or simply install it with Bower:
 
 ```shell
@@ -163,7 +164,7 @@ Lastly, add the Entangled module as a dependency to your Angular app:
 angular.module('appName', ['entangled']);
 ```
 
-#### Usage
+### Usage
 Entangled is best used within Angular services. For example, consider a `Message` service for a chat app:
 
 ```javascript
