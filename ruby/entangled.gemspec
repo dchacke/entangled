@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email         = ["dennis.hackethal@gmail.com"]
   s.summary       = %q{Makes Rails real time through websockets.}
   s.description   = %q{Makes Rails real time through websockets. Check out the JavaScript counterpart for the front end.}
-  s.homepage      = "https://github.com/so-entangled/rails"
+  s.homepage      = "https://github.com/dchacke/entangled"
   s.license       = "MIT"
 
   s.files         = `git ls-files -z`.split("\x0")
