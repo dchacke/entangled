@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Dennis Charles Hackethal"]
   s.email         = ["dennis.hackethal@gmail.com"]
   s.summary       = %q{Makes Rails real time through websockets.}
-  s.description   = %q{Makes Rails real time through websockets. Check out the JavaScript counterpart for the front end.}
+  s.description   = %q{Makes Rails real time through websockets as a gem in the backend and as an Angular library in the front end.}
   s.homepage      = "https://github.com/dchacke/entangled"
   s.license       = "MIT"
 

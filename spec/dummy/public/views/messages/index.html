@@ -1,0 +1,13 @@
+<h1>Messages</h1>
+
+<table>
+  <tr ng-repeat="message in messages">
+    <td><a ng-href="#/messages/{{ message.id }}">{{ message.body }}</a></td>
+    <td><button ng-click="destroy(message)">Delete</button></td>
+  </li>
+</table>
+
+<form ng-submit="create()">
+  <input type="text" ng-model="message.body">
+  <input type="submit">
+</form>
