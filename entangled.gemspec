@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Dennis Charles Hackethal"]
   s.email         = ["dennis.hackethal@gmail.com"]
   s.summary       = %q{Makes Rails real time through websockets.}
-  s.description   = %q{Makes Rails real time through websockets. Check out the JavaScript counterpart for the front end.}
+  s.description   = %q{Makes Rails real time through websockets as a gem in the backend and as an Angular library in the front end.}
   s.homepage      = "https://github.com/dchacke/entangled"
   s.license       = "MIT"
 
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sqlite3', '~> 1.3'
   s.add_development_dependency 'byebug', '~> 3.5'
   s.add_development_dependency 'bourne', '~> 1.6'
+  s.add_development_dependency 'puma', '~> 2.11'
   s.add_dependency 'tubesock', '~> 0.2'
   s.add_dependency 'rails', '~> 4.2'
   s.add_dependency 'redis', '~> 3.2'
