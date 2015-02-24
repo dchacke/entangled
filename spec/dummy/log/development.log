@@ -1,0 +1,196 @@
+  [1m[36m (2.8ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (1.3ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateMessages (20150222083608)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  CREATE TABLE "messages" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150222083608"]]
+  [1m[35m (1.2ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36m (0.1ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (3.0ms)[0m  INSERT INTO "messages" ("body", "created_at", "updated_at") VALUES (?, ?, ?)  [["body", "foo"], ["created_at", "2015-02-22 20:49:16.215058"], ["updated_at", "2015-02-22 20:49:16.215058"]]
+  [1m[36m (1.2ms)[0m  [1mcommit transaction[0m
+  [1m[36m (0.1ms)[0m  [1mSELECT COUNT(*) FROM "messages"[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "messages" ("body", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["body", "foo"], ["created_at", "2015-02-22 20:49:46.412513"], ["updated_at", "2015-02-22 20:49:46.412513"]]
+  [1m[35m (2.1ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateFoos (20150223004816)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.4ms)[0m  [1mCREATE TABLE "foos" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150223004816"]]
+  [1m[36m (1.8ms)[0m  [1mcommit transaction[0m
+Migrating to CreateBars (20150223004834)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.7ms)[0m  [1mCREATE TABLE "bars" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150223004834"]]
+  [1m[36m (1.3ms)[0m  [1mcommit transaction[0m
+Migrating to CreateFoobars (20150223004841)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.4ms)[0m  [1mCREATE TABLE "foobars" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150223004841"]]
+  [1m[36m (1.1ms)[0m  [1mcommit transaction[0m
+Migrating to CreateBarfoos (20150223004852)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (0.4ms)[0m  [1mCREATE TABLE "barfoos" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20150223004852"]]
+  [1m[36m (1.1ms)[0m  [1mcommit transaction[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+
+
+Started GET "/messages" for ::1 at 2015-02-23 18:55:17 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+
+AbstractController::ActionNotFound (The action 'index' could not be found for MessagesController):
+  actionpack (4.2.0) lib/abstract_controller/base.rb:132:in `process'
+  actionview (4.2.0) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.0) lib/action_controller/metal.rb:195:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.0) lib/action_controller/metal.rb:236:in `block in action'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:73:in `dispatch'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:42:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `each'
+  actionpack (4.2.0) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.0) lib/action_dispatch/routing/route_set.rb:802:in `call'
+  rack (1.6.0) lib/rack/etag.rb:24:in `call'
+  rack (1.6.0) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.0) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.0) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.0) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.0) lib/active_record/connection_adapters/abstract/connection_pool.rb:647:in `call'
+  activerecord (4.2.0) lib/active_record/migration.rb:378:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `call'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:88:in `_run_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:734:in `_run_call_callbacks'
+  activesupport (4.2.0) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.0) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.0) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.0) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.0) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.0) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.0) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.0) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.0) lib/action_dispatch/middleware/static.rb:113:in `call'
+  rack (1.6.0) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.0) lib/rails/engine.rb:518:in `call'
+  railties (4.2.0) lib/rails/application.rb:164:in `call'
+  rack (1.6.0) lib/rack/lock.rb:17:in `call'
+  rack (1.6.0) lib/rack/content_length.rb:15:in `call'
+  rack (1.6.0) lib/rack/handler/webrick.rb:89:in `service'
+  /Users/dennischarleshackethal/.rvm/rubies/ruby-2.1.0/lib/ruby/2.1.0/webrick/httpserver.rb:138:in `service'
+  /Users/dennischarleshackethal/.rvm/rubies/ruby-2.1.0/lib/ruby/2.1.0/webrick/httpserver.rb:94:in `run'
+  /Users/dennischarleshackethal/.rvm/rubies/ruby-2.1.0/lib/ruby/2.1.0/webrick/server.rb:295:in `block in start_thread'
+
+
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/unknown_action.html.erb within rescues/layout (2.1ms)
+
+
+Started GET "/messages" for ::1 at 2015-02-23 18:56:05 -0800
+Processing by MessagesController#index as HTML
+Completed 500 Internal Server Error in 1ms
+
+NotImplementedError (only partial hijack is supported.):
+  app/controllers/messages_controller.rb:7:in `index'
+
+
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (7.1ms)
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (3.1ms)
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (12.6ms)
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.html.erb within rescues/layout (42.2ms)
+
+
+Started GET "/messages" for ::1 at 2015-02-23 18:56:35 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by MessagesController#index as HTML
+Completed 500 Internal Server Error in 0ms
+
+NotImplementedError (only partial hijack is supported.):
+  app/controllers/messages_controller.rb:7:in `index'
+
+
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_source.erb (50.6ms)
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (3.7ms)
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (14.3ms)
+  Rendered /Users/dennischarleshackethal/.rvm/gems/ruby-2.1.0/gems/actionpack-4.2.0/lib/action_dispatch/middleware/templates/rescues/diagnostics.html.erb within rescues/layout (88.3ms)
+
+
+Started GET "/messages" for ::1 at 2015-02-23 18:58:44 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by MessagesController#index as HTML
+  [1m[35mMessage Load (0.9ms)[0m  SELECT "messages".* FROM "messages"
+  Rendered text template (0.0ms)
+Completed -1  in 38ms (Views: 19.5ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/messages/1/destroy" for ::1 at 2015-02-23 18:58:47 -0800
+Processing by MessagesController#destroy as HTML
+  Parameters: {"id"=>"1"}
+  Rendered text template (0.0ms)
+Completed -1  in 5ms (Views: 3.6ms | ActiveRecord: 0.0ms)
+  [1m[36mMessage Load (1.2ms)[0m  [1mSELECT  "messages".* FROM "messages" WHERE "messages"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mDELETE FROM "messages" WHERE "messages"."id" = ?[0m  [["id", 1]]
+  [1m[35m (2.0ms)[0m  commit transaction
+
+
+Started GET "/messages/2/destroy" for ::1 at 2015-02-23 18:58:48 -0800
+Processing by MessagesController#destroy as HTML
+  Parameters: {"id"=>"2"}
+  Rendered text template (0.0ms)
+Completed -1  in 2ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+  [1m[36mMessage Load (0.8ms)[0m  [1mSELECT  "messages".* FROM "messages" WHERE "messages"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mDELETE FROM "messages" WHERE "messages"."id" = ?[0m  [["id", 2]]
+  [1m[35m (1.5ms)[0m  commit transaction
+  [1m[36m (1.7ms)[0m  [1mSELECT COUNT(*) FROM "messages"[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.8ms)[0m  [1mINSERT INTO "messages" ("body", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["body", "foo"], ["created_at", "2015-02-24 02:59:24.773458"], ["updated_at", "2015-02-24 02:59:24.773458"]]
+  [1m[35m (1.7ms)[0m  commit transaction
+
+
+Started GET "/messages" for ::1 at 2015-02-23 19:02:02 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by MessagesController#index as HTML
+  [1m[35mMessage Load (0.4ms)[0m  SELECT "messages".* FROM "messages"
+  Rendered text template (0.0ms)
+Completed -1  in 33ms (Views: 21.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/messages" for ::1 at 2015-02-23 19:03:23 -0800
+Processing by MessagesController#index as HTML
+  Rendered text template (0.0ms)
+  [1m[36mMessage Load (0.5ms)[0m  [1mSELECT "messages".* FROM "messages"[0m
+Completed -1  in 5ms (Views: 3.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/messages" for ::1 at 2015-02-23 19:08:48 -0800
+Processing by MessagesController#index as HTML
+  Rendered text template (0.0ms)
+Completed -1  in 2ms (Views: 1.0ms | ActiveRecord: 0.0ms)
+  [1m[35mMessage Load (0.3ms)[0m  SELECT "messages".* FROM "messages"
+
+
+Started GET "/messages" for ::1 at 2015-02-23 19:11:27 -0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by MessagesController#index as HTML
+  [1m[35mMessage Load (0.4ms)[0m  SELECT "messages".* FROM "messages"
+  Rendered text template (0.0ms)
+Completed -1  in 30ms (Views: 16.0ms | ActiveRecord: 0.0ms)
