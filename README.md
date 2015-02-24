@@ -146,7 +146,82 @@ Otherwise the channels won't work.
 Depending on your app's settings, you might have to increase the pool size in your database.yml configuration file, since every new socket will open a new connection to your database.
 
 ### The Client
-You will need to configure your client to create Websockets and understand incoming requests on those sockets. If you use Angular for your frontend, you can use [this library](https://github.com/so-entangled/angular). The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
+You will need to configure your client to create Websockets and understand incoming requests on those sockets. If you use Angular for your frontend, you can use the Angular library from this repository. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
+
+#### Installation
+You can either download or reference the file `entangled.js` from this repository, or simply install it with Bower:
+
+```shell
+$ bower install entangled
+```
+
+Then include it in your HTML.
+
+Lastly, add the Entangled module as a dependency to your Angular app:
+
+```javascript
+angular.module('appName', ['entangled']);
+```
+
+#### Usage
+Entangled is best used within Angular services. For example, consider a `Message` service for a chat app:
+
+```javascript
+app.factory('Message', function(Entangled) {
+  var entangled = new Entangled('ws://localhost:3000/messages');
+
+  var Message = {
+    new: function(params) {
+      return entangled.new(params);
+    },
+    all: function(callback) {
+      return entangled.all(callback);
+    },
+    find: function(id, callback) {
+      return entangled.find(id, callback);
+    }
+  };
+
+  return Message;
+});
+```
+
+In the above example, first you inject Entangled into your service, then instantiate a new Entangled service passing it the socket to the index action of that resource in your backend (in this case, `/messages`), and then add helper methods to your service.
+
+In your controller, you could then inject that `Message` service and use it like so:
+
+```javascript
+// To instantiate a blank message, e.g. for a form;
+// You can optionally pass in an object to new() to
+// set some default values
+$scope.message = Message.new();
+
+// To retrieve a specific message from the server
+// with id 1 and subscribe to its channel
+Message.find(1, function() {
+  $scope.$apply(function() {
+    $scope.message = message;
+  });
+});
+
+// To create a new or update an existing message
+$scope.message.$save();
+
+// To destroy a message
+$scope.message.$destroy();
+
+// To retrieve all messages from the server and
+// subscribe to the collection's channel
+Message.all(function(messages) {
+  $scope.$apply(function() {
+    $scope.messages = messages;
+  });
+});
+```
+
+`$save()`, `$destroy()`, `find()` and `all()` will interact with your server's controllers in real time.
+
+If data in your server's database changes, so will your scope variables - in real time, for all connected clients.
 
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views. A frontend separate from your Rails app, such as Angular with Grunt, is recommended.
