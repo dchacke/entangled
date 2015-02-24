@@ -14,3 +14,4 @@
 *.gem
 mkmf.log
 /spec/dummy/log/test.log
+dump.rdb
