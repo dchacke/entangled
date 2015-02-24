@@ -231,7 +231,7 @@ This gem is best used for Rails apps that serve as APIs only and are not concern
 The gem rely's heavily on convention over configuration and currently only works with restful style controllers as shown above. More customization will be available soon.
 
 ## Contributing
-1. Fork it ( https://github.com/so-entangled/rails/fork )
+1. Fork it ( https://github.com/dchacke/entangled/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
