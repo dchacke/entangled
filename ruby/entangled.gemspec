@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sqlite3', '~> 1.3'
   s.add_development_dependency 'byebug', '~> 3.5'
   s.add_development_dependency 'bourne', '~> 1.6'
+  s.add_development_dependency 'puma', '~> 2.11'
   s.add_dependency 'tubesock', '~> 0.2'
   s.add_dependency 'rails', '~> 4.2'
   s.add_dependency 'redis', '~> 3.2'
