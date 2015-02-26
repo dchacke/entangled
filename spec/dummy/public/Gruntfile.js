@@ -1,3 +1,6 @@
+// Created with the help of
+// http://paislee.io/testing-angularjs-with-grunt-karma-and-jasmine/
+
 module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-karma');
