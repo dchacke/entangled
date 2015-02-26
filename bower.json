@@ -8,14 +8,14 @@
   "license": "MIT",
   "homepage": "https://github.com/dchacke/entangled",
   "ignore": [
-    'lib',
-    'spec',
-    '.gitignore',
-    'entangled-0.0.9.gem',
-    'entangled.gemspec',
-    'Gemfile',
-    'Gemfile.lock',
-    'Rakefile'
+    "lib",
+    "spec",
+    ".gitignore",
+    "entangled-0.0.9.gem",
+    "entangled.gemspec",
+    "Gemfile",
+    "Gemfile.lock",
+    "Rakefile"
   ],
   "main": "entangled.js"
 }
