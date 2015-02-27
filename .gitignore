@@ -16,3 +16,5 @@ dump.rdb
 *.sqlite3
 *.log
 *.pid
+bower_components/
+node_modules/
