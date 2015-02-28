@@ -51,5 +51,31 @@ describe('Entangled', function() {
         expect(instance.$destroy).toBeDefined();
       });
     });
+
+    describe('#find', function() {
+      it('is a function', function() {
+        var entangled = new Entangled(webSocketUrl);
+        expect(entangled.find).toBeDefined();
+      });
+    });
+
+    describe('#all', function() {
+      it('is a function', function() {
+        var entangled = new Entangled(webSocketUrl);
+        expect(entangled.all).toBeDefined();
+      });
+    });
+  });
+
+  describe('CRUD', function() {
+    it('creates a resource');
+    it('updates a resource');
+    it('destroys a resource');
+    it('updates all() after create');
+    it('updates all() after destroy')
+    it('can find() after create');
+    it('cannot find() after destroy');
+
+    // http://jasmine.github.io/2.0/introduction.html#section-Asynchronous_Support
   });
 });
