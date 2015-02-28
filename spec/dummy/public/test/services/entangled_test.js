@@ -51,5 +51,19 @@ describe('Entangled', function() {
         expect(instance.$destroy).toBeDefined();
       });
     });
+
+    describe('#find', function() {
+      it('is a function', function() {
+        var entangled = new Entangled(webSocketUrl);
+        expect(entangled.find).toBeDefined();
+      });
+    });
+
+    describe('#all', function() {
+      it('is a function', function() {
+        var entangled = new Entangled(webSocketUrl);
+        expect(entangled.all).toBeDefined();
+      });
+    });
   });
 });
