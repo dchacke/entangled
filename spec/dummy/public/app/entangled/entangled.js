@@ -25,7 +25,7 @@ angular.module('entangled', [])
   // to either create a new record or update
   // an existing, depending on whether or not
   // an id is present.
-  Resource.prototype.$save = function() {
+  Resource.prototype.$save = function(callback) {
     console.log('Saving...');
 
     var that = this;
@@ -37,21 +37,29 @@ angular.module('entangled', [])
       var socket = new WebSocket(that.webSocketUrl + '/' + that.id + '/update');
       socket.onopen = function() {
         socket.send(JSON.stringify(that));
+
+        if (callback) callback();
+
         console.log('Updated');
       };
     } else {
       // Create
       console.log('Creating...');
       var socket = new WebSocket(that.webSocketUrl + '/create');
+      console.log(socket);
       socket.onopen = function() {
         socket.send(JSON.stringify(that));
+
+        if (callback) callback();
+
+        console.log('Created');
       };
     }
   };
 
   // $destroy() will send a request to the server to
   // destroy an existing record.
-  Resource.prototype.$destroy = function() {
+  Resource.prototype.$destroy = function(callback) {
     console.log('From $destroy: ', this);
 
     var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/destroy');
@@ -60,6 +68,8 @@ angular.module('entangled', [])
       // socket's URL contains all the information
       // needed to destroy the record (the id).
       socket.send(null);
+
+      if (callback) callback();
     };
   };
 
