@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         options: {
           frameworks: ['jasmine'],
           singleRun: true,
-          browsers: ['PhantomJS'],
+          browsers: ['Chrome'], // 'PhantomJS'
           files: [
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',

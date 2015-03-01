@@ -6,7 +6,9 @@ angular.module('entangledTest')
   $scope.message = Message.new();
 
   $scope.create = function() {
-    $scope.message.$save();
+    $scope.message.$save(function() {
+      $scope.message = Message.new();
+    });
   };
 
   $scope.destroy = function(message) {
