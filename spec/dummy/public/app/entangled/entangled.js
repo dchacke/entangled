@@ -46,8 +46,9 @@ angular.module('entangled', [])
       // Create
       console.log('Creating...');
       var socket = new WebSocket(that.webSocketUrl + '/create');
-      console.log(socket);
+
       socket.onopen = function() {
+        console.log(socket);
         socket.send(JSON.stringify(that));
 
         if (callback) callback();
