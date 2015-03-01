@@ -68,7 +68,32 @@ describe('Entangled', function() {
   });
 
   describe('CRUD', function() {
-    it('creates a resource');
+    describe('create', function() {
+      var resource,
+          entangled;
+
+      beforeEach(function(done) {
+        entangled = new Entangled(webSocketUrl);
+        resource = entangled.new({ body: 'foo' });
+        resource.$save(function() {
+          console.log('done!');
+          done();
+        });
+      });
+
+      it('creates a resource', function() {
+        console.log(resource);
+      });
+
+      // it("should support async execution of test preparation and expectations", function() {
+      //   value++;
+      //   expect(value).toBeGreaterThan(0);
+      // });
+    });
+    // it('creates a resource', function(done) {
+      
+    // });
+
     it('updates a resource');
     it('destroys a resource');
     it('updates all() after create');
