@@ -1,5 +1,15 @@
 'use strict';
 
+// Consider making heavy use of mocks instead;
+// the tests currently run asynchronously and
+// heavily influence each other, making them
+// hard to maintain. As suggested on this page
+// (https://docs.angularjs.org/guide/unit-testing),
+// it seems that using mocks enables you to extend
+// other modules so they are synchronous. Not
+// sure if that would isolate the tests, but
+// something is definitely needed to isolate them
+
 describe('MessagesCtrl', function () {
   beforeEach(module('entangledTest'));
 
