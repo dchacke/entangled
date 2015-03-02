@@ -68,14 +68,14 @@ module Entangled
     end
 
     module InstanceMethods
+      include Entangled::Helpers
+
       private
 
       # Publishes to client. Whoever is subscribed
       # to the model's channel or the record's channel
       # gets the message
       def publish(action)
-        redis = Redis.new
-
         redis.publish(
           self.class.inferred_channel_name,
           json(action)

@@ -146,6 +146,8 @@ $ redis-server
 
 Otherwise the channels won't work.
 
+If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer), Entangled will use that assigned instance so that you can configure Redis just like you're used to. Otherwise, Entangled will instantiate Redis itself and use its standard settings.
+
 ### Database
 Depending on your app's settings, you might have to increase the pool size in your database.yml configuration file, since every new socket will open a new connection to your database.
 
