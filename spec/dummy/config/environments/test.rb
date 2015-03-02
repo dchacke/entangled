@@ -39,4 +39,12 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # After starting the server, wipe db clean
+  # and create one dummy message that the JS
+  # tests depend on
+  config.after_initialize do
+    Message.destroy_all
+    Message.create body: 'foo'
+  end
 end

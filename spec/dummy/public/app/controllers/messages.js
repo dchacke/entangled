@@ -17,7 +17,6 @@ angular.module('entangledTest')
 
   Message.all(function(messages) {
     $scope.$apply(function() {
-      console.log('Index callback called!');
       $scope.messages = messages;
     });
   });
