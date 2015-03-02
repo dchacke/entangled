@@ -10,6 +10,8 @@ module Entangled
     end
     
     module InstanceMethods
+      include Entangled::Helpers
+
       private
 
       # The plural name of the resource, inferred from the
@@ -60,7 +62,7 @@ module Entangled
             # has to be "@tacos"
             if instance_variable_get(:"@#{resources_name}")
               redis_thread = Thread.new do
-                Redis.new.subscribe resources_name do |on|
+                redis.subscribe resources_name do |on|
                   on.message do |channel, message|
                     tubesock.send_data message
                   end
@@ -98,7 +100,7 @@ module Entangled
             # The variable name, in this example, has to be "@taco"
             if instance_variable_get(:"@#{resource_name}")
               redis_thread = Thread.new do
-                Redis.new.subscribe "#{resources_name}/#{instance_variable_get(:"@#{resource_name}").id}" do |on|
+                redis.subscribe "#{resources_name}/#{instance_variable_get(:"@#{resource_name}").id}" do |on|
                   on.message do |channel, message|
                     tubesock.send_data message
                   end

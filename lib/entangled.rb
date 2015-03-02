@@ -1,5 +1,6 @@
 require 'redis'
 require 'entangled/version'
+require 'entangled/helpers'
 require 'entangled/model'
 require 'entangled/controller'
 require 'action_dispatch/routing'
