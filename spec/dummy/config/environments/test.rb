@@ -40,11 +40,18 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # After starting the server, wipe db clean
-  # and create one dummy message that the JS
-  # tests depend on
+  # Run the following after starting the server
+  # in test mode
   config.after_initialize do
-    Message.destroy_all
-    Message.create body: 'foo'
+    # Check that messages table exists (needed for
+    # rake db:schema:load to work)
+    if ActiveRecord::Base.connection.table_exists?('messages')
+      # Wipe db clean to get a clean slate for continuous
+      # integration each time it's pushed
+      Message.destroy_all
+
+      # Create one dummy message that the JS tests depend on
+      Message.create body: 'foo'
+    end
   end
 end
