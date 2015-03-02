@@ -1,4 +1,7 @@
 # Entangled
+
+[![Codeship Status for dchacke/entangled](https://codeship.com/projects/9fe9a790-9df7-0132-5fb8-6e77ea26735b/status?branch=master)](https://codeship.com/projects/64679)
+
 Services like Firebase are great because they provide real time data binding between client and server. But they come at a price: You give up control over your backend. Wouldn't it be great to have real time functionality but still keep your beloved Rails backend? That's where Entangled comes in.
 
 Entangled is a layer behind your controllers and models that pushes updates to clients subscribed to certain channels in real time. For example, if you display a list of five messages on a page, if anyone adds a sixth message, everyone who is currently looking at that page will instantly see that sixth message being added to the list.
