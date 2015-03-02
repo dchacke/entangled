@@ -2,7 +2,7 @@
 # controller with all five actions
 class MessagesController < ApplicationController
   include Entangled::Controller
-  before_action :destroy_all, only: :create, if: -> { Rails.env.test? }
+  # before_action :destroy_all, only: :create, if: -> { Rails.env.test? }
 
   def index
     broadcast do
