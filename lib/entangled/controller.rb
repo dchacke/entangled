@@ -4,10 +4,6 @@ require 'tubesock/hijack'
 module Entangled
   module Controller
     include Tubesock::Hijack
-
-    module ClassMethods
-      
-    end
     
     module InstanceMethods
       include Entangled::Helpers
@@ -29,6 +25,26 @@ module Entangled
       # action
       def resource_name
         resources_name.singularize
+      end
+
+      # Channel name for collection of resources, used in index
+      # action
+      def collection_channel
+        resources_name
+      end
+
+      # Channel name for single resource, used in show action
+      def member_channel
+        instance = member
+        "#{resources_name}/#{instance.to_param}"
+      end
+
+      def collection
+        instance_variable_get(:"@#{resources_name}")
+      end
+
+      def member
+        instance_variable_get(:"@#{resource_name}")
       end
 
       # Broadcast events to every connected client
@@ -60,16 +76,17 @@ module Entangled
             # ...then @tacos will be broadcast to all connected
             # clients. The variable name, in this example,
             # has to be "@tacos"
-            if instance_variable_get(:"@#{resources_name}")
+            if collection
               redis_thread = Thread.new do
-                redis.subscribe resources_name do |on|
+                redis.subscribe collection_channel do |on|
+                  # Broadcast messages to all connected clients
                   on.message do |channel, message|
                     tubesock.send_data message
                   end
 
-                  # Broadcast collection to all connected clients
+                  # Send message to whoever just subscribed
                   tubesock.send_data({
-                    resources: instance_variable_get(:"@#{resources_name}")
+                    resources: collection
                   }.to_json)
                 end
               end
@@ -98,15 +115,18 @@ module Entangled
 
             # ...then @taco will be broadcast to all connected clients.
             # The variable name, in this example, has to be "@taco"
-            if instance_variable_get(:"@#{resource_name}")
+            if member
               redis_thread = Thread.new do
-                redis.subscribe "#{resources_name}/#{instance_variable_get(:"@#{resource_name}").id}" do |on|
+                redis.subscribe member_channel do |on|
+                  # Broadcast messages to all connected clients
                   on.message do |channel, message|
                     tubesock.send_data message
                   end
 
-                  # Broadcast single resource to all connected clients
-                  tubesock.send_data({ resource: instance_variable_get(:"@#{resource_name}") }.to_json)
+                  # Send message to whoever just subscribed
+                  tubesock.send_data({
+                    resource: member
+                  }.to_json)
                 end
               end
 
@@ -122,7 +142,7 @@ module Entangled
           # happens in the model's callback
           when 'create'
             tubesock.onmessage do |m|
-              params[resource_name.to_sym] = JSON.parse(m).symbolize_keys
+              params[resource_name.to_sym] = JSON.parse(m)
               yield
             end
 
@@ -132,7 +152,7 @@ module Entangled
           # id, created_at, and updated_at should not be included in params.
           when 'update'
             tubesock.onmessage do |m|
-              params[resource_name.to_sym] = JSON.parse(m).except('id', 'created_at', 'updated_at', 'webSocketUrl').symbolize_keys
+              params[resource_name.to_sym] = JSON.parse(m)
               yield
             end
 
@@ -150,7 +170,6 @@ module Entangled
     end
     
     def self.included(receiver)
-      receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
     end
   end
