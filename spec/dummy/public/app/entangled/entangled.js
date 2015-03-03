@@ -33,8 +33,6 @@ angular.module('entangled', [])
       var socket = new WebSocket(that.webSocketUrl + '/' + that.id + '/update');
       socket.onopen = function() {
         socket.send(JSON.stringify(that));
-
-        if (callback) callback();
       };
 
       // Receive updated resource from server
@@ -49,6 +47,8 @@ angular.module('entangled', [])
             }
           }
         }
+
+        if (callback) callback();
       };
     } else {
       // Create
@@ -57,8 +57,6 @@ angular.module('entangled', [])
       // Send attributes to server
       socket.onopen = function() {
         socket.send(JSON.stringify(that));
-
-        if (callback) callback();
       };
 
       // Receive saved resource from server
@@ -74,6 +72,8 @@ angular.module('entangled', [])
             }
           }
         }
+
+        if (callback) callback();
       };
     }
   };
