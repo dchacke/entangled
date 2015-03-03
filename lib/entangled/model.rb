@@ -70,6 +70,15 @@ module Entangled
     module InstanceMethods
       include Entangled::Helpers
 
+      # Override the as_json method so that the
+      # JSON representation of the resource includes
+      # its errors. This is necessary so that errors
+      # are sent back to the client along with the
+      # resource on create and update
+      def as_json(options = {})
+        attributes.merge(errors: errors).as_json
+      end
+
       private
 
       # Publishes to client. Whoever is subscribed

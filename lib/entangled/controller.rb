@@ -144,16 +144,35 @@ module Entangled
             tubesock.onmessage do |m|
               params[resource_name.to_sym] = JSON.parse(m)
               yield
+
+              # Send resource that was just created back to client. The resource
+              # on the client will be overridden with this one. This is important
+              # so that the id, created_at and updated_at and possibly other
+              # attributes arrive on the client
+              if member
+                tubesock.send_data({
+                  resource: member
+                }.to_json)
+              end
             end
 
           # If the controller's action name is 'update', a record should be
           # updated. Before yielding, the params hash has to be prepared
-          # with attributes sent to the socket. The default attributes
-          # id, created_at, and updated_at should not be included in params.
+          # with attributes sent to the socket
           when 'update'
             tubesock.onmessage do |m|
               params[resource_name.to_sym] = JSON.parse(m)
               yield
+
+              # Send resource that was just updated back to client. The resource
+              # on the client will be overridden with this one. This is important
+              # so that the new updated_at and possibly other attributes arrive
+              # on the client
+              if member
+                tubesock.send_data({
+                  resource: member
+                }.to_json)
+              end
             end
 
           # For every other controller action, simply wrap whatever is

@@ -192,7 +192,7 @@ app.factory('Message', function(Entangled) {
 });
 ```
 
-In the above example, first you inject Entangled into your service, then instantiate a new Entangled service passing it the socket to the index action of that resource in your backend (in this case, `/messages`), and then add helper methods to your service.
+In the above example, first we inject Entangled into our service, then instantiate a new Entangled object. The Entangled object takes one argument when instantiated: the URL of your resource's index route (in this case, `/messages`). Then we add helper methods to our service. Note that the socket URL looks just like a standard restful URL with http, except that the protocol part has been switched with `ws` to use the websocket protocol. Also note that you need to use `wss` instead if you want to use SSL.
 
 In your controller, you could then inject that `Message` service and use it like so:
 
@@ -236,11 +236,16 @@ This gem is best used for Rails apps that serve as APIs only and are not concern
 The gem rely's heavily on convention over configuration and currently only works with restful style controllers as shown above. More customization will be available soon.
 
 ## Contributing
-1. Fork it ( https://github.com/dchacke/entangled/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
+2. Run `$ bundle install` in the root of the repo
+3. Run `$ bower install` and `$ npm install` in spec/dummy/public
+4. The back end example app resides in spec/dummy; you can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`; run your tests in the root of the repo by running `$ rspec`
+5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment!
+6. Write your tests
+7. Write your feature to make the tests pass
+8. Stage and commit your changes
+9. Push to a new feature branch in your repo
+10. Send me a pull request!
 
 ## Credits
 Thanks to [Ilias Tsangaris](https://github.com/iliastsangaris) for inspiring the name "Entanglement" based on [Quantum Entanglement](http://en.wikipedia.org/wiki/Quantum_entanglement) where pairs or groups of particles always react to changes as a whole, i.e. changes to one particle will result in immediate change of all particles in the group.

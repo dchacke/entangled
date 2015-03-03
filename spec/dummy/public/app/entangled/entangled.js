@@ -36,14 +36,44 @@ angular.module('entangled', [])
 
         if (callback) callback();
       };
+
+      // Receive updated resource from server
+      socket.onmessage = function(event) {
+        if (event.data) {
+          var data = JSON.parse(event.data);
+
+          // Assign/override new data (such as updated_at, etc)
+          if (data.resource) {
+            for (key in data.resource) {
+              that[key] = data.resource[key];
+            }
+          }
+        }
+      };
     } else {
       // Create
       var socket = new WebSocket(that.webSocketUrl + '/create');
 
+      // Send attributes to server
       socket.onopen = function() {
         socket.send(JSON.stringify(that));
 
         if (callback) callback();
+      };
+
+      // Receive saved resource from server
+      socket.onmessage = function(event) {
+        if (event.data) {
+          var data = JSON.parse(event.data);
+
+          // Assign/override new data (such as id, created_at,
+          // updated_at, etc)
+          if (data.resource) {
+            for (key in data.resource) {
+              that[key] = data.resource[key];
+            }
+          }
+        }
       };
     }
   };
