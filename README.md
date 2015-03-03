@@ -235,11 +235,12 @@ Objects from the Entangled service automatically receive ActiveRecord's error me
 For example, consider the following scenario:
 
 ```ruby
-# Message model
+# Message model (Rails)
 validates :body, presence: true
 ```
 
 ```javascript
+// Controller (Angular)
 $scope.message.$save(function() {
   console.log($scope.message.errors);
   // => { body: ["can't be blank"] }
@@ -249,7 +250,7 @@ $scope.message.$save(function() {
 You could then display these error messages to your users.
 
 ## Planning Your Infrastructure
-This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views. A frontend separate from your Rails app, such as Angular with Grunt, is recommended.
+This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A frontend separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
 ## Limitations
 The gem rely's heavily on convention over configuration and currently only works with restful style controllers as shown above. More customization will be available soon.
@@ -260,11 +261,12 @@ The gem rely's heavily on convention over configuration and currently only works
 3. Run `$ bower install` and `$ npm install` in spec/dummy/public
 4. The back end example app resides in spec/dummy; you can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`; run your tests in the root of the repo by running `$ rspec`
 5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment!
-6. Write your tests
-7. Write your feature to make the tests pass
-8. Stage and commit your changes
-9. Push to a new feature branch in your repo
-10. Send me a pull request!
+6. The Entangled Angular service resides in spec/dummy/public/app/entangled/entangled.js. This is where you can make changes to the service; a copy of it, living in /entangled.js at the root of the repo, should be kept in sync for it to be available with Bower, so it's best if you replace this file with the one from the dummy app should have made any changes to the latter
+7. Write your tests
+8. Write your feature to make the tests pass
+9. Stage and commit your changes
+10. Push to a new feature branch in your repo
+11. Send me a pull request!
 
 ## Credits
 Thanks to [Ilias Tsangaris](https://github.com/iliastsangaris) for inspiring the name "Entanglement" based on [Quantum Entanglement](http://en.wikipedia.org/wiki/Quantum_entanglement) where pairs or groups of particles always react to changes as a whole, i.e. changes to one particle will result in immediate change of all particles in the group.
