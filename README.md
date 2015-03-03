@@ -240,7 +240,7 @@ The gem rely's heavily on convention over configuration and currently only works
 2. Run `$ bundle install` in the root of the repo
 3. Run `$ bower install` and `$ npm install` in spec/dummy/public
 4. The back end example app resides in spec/dummy; you can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`; run your tests in the root of the repo by running `$ rspec`
-5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab
+5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment!
 6. Write your tests
 7. Write your feature to make the tests pass
 8. Stage and commit your changes

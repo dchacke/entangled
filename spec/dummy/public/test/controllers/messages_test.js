@@ -49,10 +49,26 @@ describe('MessagesCtrl', function () {
     setTimeout(function() {
       var oldLength = scope.messages.length;
 
+      // Assert it's a new message
+      expect(scope.message.id).not.toBeDefined();
+
+      // Be sure to pass validations in the back end
+      scope.message.body = 'foo';
+
+      // Save it
       scope.message.$save(function() {
         setTimeout(function() {
+          // Make sure that the message was added to the collection
           expect(scope.messages.length).toBe(oldLength + 1);
-          done();
+
+          // Make sure that it has been persisted and new attributes
+          // were sent over from the back end and updated here
+          setTimeout(function() {
+            expect(scope.message.id).toBeDefined();
+            expect(scope.message.created_at).toBeDefined();
+            expect(scope.message.updated_at).toBeDefined();
+            done();
+          }, 100);
         }, 100);
       });      
     }, 100);
@@ -66,12 +82,49 @@ describe('MessagesCtrl', function () {
       // Assert that message has been persisted before
       expect(message.id).toBeDefined();
 
+      // Remember old updated_at
+      var oldUpdatedAt = message.updated_at;
+
       // Update it
       message.body = 'new body';
       message.$save(function() {
         setTimeout(function() {
           // Assert that message was updated across collection
-          expect(scope.messages[0].body).toEqual('new body');
+          expect(scope.messages[0].body).toBe('new body');
+
+          // Assert that message was actually updated in back end
+          // and attributes have been updated here
+          expect(scope.message.updated_at).not.toBe(oldUpdatedAt);
+          done();
+        }, 100);
+      });
+    }, 100);
+  });
+
+  it('gets validation errors', function(done) {
+    setTimeout(function() {
+      // Pick first message
+      var message = scope.messages[0];
+
+      // Assert that message has been persisted before
+      expect(message.id).toBeDefined();
+
+      // Update it so it won't pass validations in the back end
+      message.body = '';
+
+      // Remember old updated_at
+      var oldUpdatedAt = message.updated_at;
+
+      // Save it
+      message.$save(function() {
+        setTimeout(function() {
+          // Assert that message was not updated on server
+          expect(message.updated_at).toBe(oldUpdatedAt);
+
+          // Assert that the message has error messages attached
+          // to it
+          expect(message.errors.body).toEqual(["can't be blank"])
+
           done();
         }, 100);
       });

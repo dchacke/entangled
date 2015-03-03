@@ -26,34 +26,54 @@ angular.module('entangled', [])
   // an existing, depending on whether or not
   // an id is present.
   Resource.prototype.$save = function(callback) {
-    console.log('Saving...');
-
     var that = this;
-    console.log(that);
 
     if (this.id) {
       // Update
-      console.log('Updating...');
       var socket = new WebSocket(that.webSocketUrl + '/' + that.id + '/update');
       socket.onopen = function() {
         socket.send(JSON.stringify(that));
 
         if (callback) callback();
+      };
 
-        console.log('Updated');
+      // Receive updated resource from server
+      socket.onmessage = function(event) {
+        if (event.data) {
+          var data = JSON.parse(event.data);
+
+          // Assign/override new data (such as updated_at, etc)
+          if (data.resource) {
+            for (key in data.resource) {
+              that[key] = data.resource[key];
+            }
+          }
+        }
       };
     } else {
       // Create
-      console.log('Creating...');
       var socket = new WebSocket(that.webSocketUrl + '/create');
 
+      // Send attributes to server
       socket.onopen = function() {
-        console.log(socket);
         socket.send(JSON.stringify(that));
 
         if (callback) callback();
+      };
 
-        console.log('Created');
+      // Receive saved resource from server
+      socket.onmessage = function(event) {
+        if (event.data) {
+          var data = JSON.parse(event.data);
+
+          // Assign/override new data (such as id, created_at,
+          // updated_at, etc)
+          if (data.resource) {
+            for (key in data.resource) {
+              that[key] = data.resource[key];
+            }
+          }
+        }
       };
     }
   };
@@ -61,8 +81,6 @@ angular.module('entangled', [])
   // $destroy() will send a request to the server to
   // destroy an existing record.
   Resource.prototype.$destroy = function(callback) {
-    console.log('From $destroy: ', this);
-
     var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/destroy');
     socket.onopen = function() {
       // It's fine to send an empty message since the
@@ -119,22 +137,16 @@ angular.module('entangled', [])
 
         // If the collection of Resources was sent
         if (data.resources) {
-          console.log('Index');
-
           // Store retrieved Resources in property
           this.resources = new Resources(data.resources, socket.url);
         } else if (data.action) {
           if (data.action === 'create') {
             // If new Resource was created, add it to the
             // collection
-            console.log('Created');
-            console.log(this.resources);
-
             this.resources.all.push(new Resource(data.resource, socket.url));
           } else if (data.action === 'update') {
             // If an existing Resource was updated,
             // update it in the collection as well
-            console.log('Updated');
             var index;
 
             for (var i = 0; i < this.resources.all.length; i++) {
@@ -147,7 +159,6 @@ angular.module('entangled', [])
           } else if (data.action === 'destroy') {
             // If a Resource was destroyed, remove it
             // from Resources as well
-            console.log('Destroyed');
             var index;
 
             for (var i = 0; i < this.resources.all.length; i++) {
@@ -158,7 +169,7 @@ angular.module('entangled', [])
 
             this.resources.all.splice(index, 1);
           } else {
-            console.log('Something else happened...');
+            console.log('Something else other than CRUD happened...');
             console.log(data);
           }
         }
@@ -180,7 +191,6 @@ angular.module('entangled', [])
       if (event.data.length) {
         // Parse message and convert to JSON
         var data = JSON.parse(event.data);
-        console.log('Show');
 
         if (data.resource && !data.action) {
           // If the Resource was sent from the server,
@@ -190,18 +200,14 @@ angular.module('entangled', [])
           if (data.action === 'update') {
             // If the stored Resource was updated,
             // update it here as well
-            console.log('updated!');
-
             this.resource = new Resource(data.resource, webSocketUrl);
           } else if (data.action === 'destroy') {
             // If the stored Resource was destroyed,
             // remove it from here as well
-            console.log('destroyed!');
-
             this.resource = undefined;
           }
         } else {
-          console.log('something else happened...');
+          console.log('Something else other than CRUD happened...');
           console.log(data);
         }
       }
