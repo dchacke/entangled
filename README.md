@@ -192,7 +192,7 @@ app.factory('Message', function(Entangled) {
 });
 ```
 
-In the above example, first you inject Entangled into your service, then instantiate a new Entangled service passing it the socket to the index action of that resource in your backend (in this case, `/messages`), and then add helper methods to your service.
+In the above example, first we inject Entangled into our service, then instantiate a new Entangled object. The Entangled object takes one argument when instantiated: the URL of your resource's index route (in this case, `/messages`). Then we add helper methods to our service. Note that the socket URL looks just like a standard restful URL with http, except that the protocol part has been switched with `ws` to use the websocket protocol. Also note that you need to use `wss` instead if you want to use SSL.
 
 In your controller, you could then inject that `Message` service and use it like so:
 
