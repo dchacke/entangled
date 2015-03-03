@@ -117,16 +117,14 @@ describe('MessagesCtrl', function () {
 
       // Save it
       message.$save(function() {
-        setTimeout(function() {
-          // Assert that message was not updated on server
-          expect(message.updated_at).toBe(oldUpdatedAt);
+        // Assert that message was not updated on server
+        expect(message.updated_at).toBe(oldUpdatedAt);
 
-          // Assert that the message has error messages attached
-          // to it
-          expect(message.errors.body).toEqual(["can't be blank"])
+        // Assert that the message has error messages attached
+        // to it
+        expect(message.errors.body).toEqual(["can't be blank"])
 
-          done();
-        }, 100);
+        done();
       });
     }, 100);
   });

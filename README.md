@@ -104,13 +104,14 @@ class MessagesController < ApplicationController
 
   def create
     broadcast do
-      Message.create(message_params)
+      @message = Message.create(message_params)
     end
   end
 
   def update
     broadcast do
-      Message.find(params[:id]).update(message_params)
+      @message = Message.find(params[:id])
+      @message.update(message_params)
     end
   end
 
@@ -132,7 +133,6 @@ Note the following:
 - All methods are wrapped in a new `broadcast` block needed to send messages to connected clients
 - The `index` method will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
 - The `show` method will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
-- Instance variables only need to be assigned in `index` and `show` since these are the only methods that should be concerned with sending data to clients. All other methods only publish updates to the data clients are subscribed to through the callbacks added to the model, so no instance variables are needed
 - Data sent to clients arrives as stringified JSON
 - Strong parameters are expected
 
@@ -228,6 +228,23 @@ Message.all(function(messages) {
 `$save()`, `$destroy()`, `find()` and `all()` will interact with your server's controllers in real time.
 
 If data in your server's database changes, so will your scope variables - in real time, for all connected clients.
+
+### Validations
+Error messages from ActiveRecord validations will automatically propagate to your JavaScript object when calling `$save()`. It has an additional property called `errors` containing error messages from ActiveRecord, formatted the same way you're used to from calling `.errors` on a model in Rails.
+
+For example, consider the following scenario:
+
+```ruby
+# Model
+validates :body, presence: true
+```
+
+```javascript
+$scope.message.$save(function() {
+  console.log($scope.message.errors);
+  // => ["can't be blank"]
+});
+```
 
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views. A frontend separate from your Rails app, such as Angular with Grunt, is recommended.
