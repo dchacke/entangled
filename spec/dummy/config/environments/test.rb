@@ -51,7 +51,11 @@ Rails.application.configure do
       Message.destroy_all
 
       # Create one dummy message that the JS tests depend on
-      Message.create body: 'foo'
+      Message.create! body: 'foo'
     end
   end
+
+  # Configure log because the server won't log anything otherwise
+  # config.logger = Logger.new(STDOUT)
+  # config.logger.level = Logger::ERROR
 end

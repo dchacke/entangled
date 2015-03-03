@@ -106,5 +106,19 @@ RSpec.describe Message, type: :model do
         end
       end
     end
+
+    describe '#as_json' do
+      it 'includes errors' do
+        message = Message.create
+        expect(message.as_json["errors"][:body]).to include "can't be blank"
+      end
+    end
+  end
+
+  describe 'Validations' do
+    it 'validates presence of the body' do
+      message = Message.create
+      expect(message.errors[:body]).to include "can't be blank"
+    end
   end
 end
