@@ -132,7 +132,7 @@ Note the following:
 
 - All methods are wrapped in a new `broadcast` block needed to send messages to connected clients
 - The `index` method will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
-- The `show` method will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
+- The `show`, `create` and `update` methods will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
 - Data sent to clients arrives as stringified JSON
 - Strong parameters are expected
 
@@ -230,21 +230,23 @@ Message.all(function(messages) {
 If data in your server's database changes, so will your scope variables - in real time, for all connected clients.
 
 ### Validations
-Error messages from ActiveRecord validations will automatically propagate to your JavaScript object when calling `$save()`. It has an additional property called `errors` containing error messages from ActiveRecord, formatted the same way you're used to from calling `.errors` on a model in Rails.
+Objects from the Entangled service automatically receive ActiveRecord's error messages from your model when you `$save()`. An additional property called `errors` containing the error messages is available, formatted the same way you're used to from calling `.errors` on a model in Rails.
 
 For example, consider the following scenario:
 
 ```ruby
-# Model
+# Message model
 validates :body, presence: true
 ```
 
 ```javascript
 $scope.message.$save(function() {
   console.log($scope.message.errors);
-  // => ["can't be blank"]
+  // => { body: ["can't be blank"] }
 });
 ```
+
+You could then display these error messages to your users.
 
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views. A frontend separate from your Rails app, such as Angular with Grunt, is recommended.
