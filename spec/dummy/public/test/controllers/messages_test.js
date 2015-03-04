@@ -188,4 +188,18 @@ describe('MessagesCtrl', function () {
       done();
     }, 100);
   });
+
+  it('can check for persistence', function() {
+    // Instantiate record and mimic persistence
+    var message = Message.new({ id: 1 });
+
+    expect(message.$persisted()).toBeTruthy();
+  });
+
+  it('can check for lack of persistence', function() {
+    // Instantiate record and mimic lack of persistence
+    var message = Message.new({ id: undefined });
+
+    expect(message.$persisted()).not.toBeTruthy();
+  });
 });
