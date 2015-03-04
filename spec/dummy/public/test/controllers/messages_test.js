@@ -74,6 +74,13 @@ describe('MessagesCtrl', function () {
     }, 100);
   });
 
+  it('can instantiate and save a message in one go with $create', function(done) {
+    Message.create({ body: 'foo' }, function(message) {
+      expect(message.$persisted()).toBeTruthy();
+      done();
+    });
+  });
+
   it('can update an existing message', function(done) {
     setTimeout(function() {
       // Pick first message
@@ -187,5 +194,19 @@ describe('MessagesCtrl', function () {
       });
       done();
     }, 100);
+  });
+
+  it('can check for persistence', function() {
+    // Instantiate record and mimic persistence
+    var message = Message.new({ id: 1 });
+
+    expect(message.$persisted()).toBeTruthy();
+  });
+
+  it('can check for lack of persistence', function() {
+    // Instantiate record and mimic lack of persistence
+    var message = Message.new({ id: undefined });
+
+    expect(message.$persisted()).not.toBeTruthy();
   });
 });

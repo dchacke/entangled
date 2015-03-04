@@ -202,19 +202,32 @@ In your controller, you could then inject that `Message` service and use it like
 // set some default values
 $scope.message = Message.new();
 
-// To retrieve a specific message from the server
-// with id 1 and subscribe to its channel
-Message.find(1, function() {
+// To instantiate and save a message in one go
+Message.create({ body: 'text' }, function(message) {
   $scope.$apply(function() {
     $scope.message = message;
   });
 });
 
-// To create a new or update an existing message
-$scope.message.$save();
+// To retrieve a specific message from the server
+// with id 1 and subscribe to its channel
+Message.find(1, function(message) {
+  $scope.$apply(function() {
+    $scope.message = message;
+  });
+});
+
+// To store a newly instantiated or update an existing message.
+// If saved successfully, scope.message is updated with the
+// attributes id, created_at and updated_at
+$scope.message.$save(function() {
+  // Do stuff after save
+});
 
 // To destroy a message
-$scope.message.$destroy();
+$scope.message.$destroy(function() {
+  // Do stuff after destroy
+});
 
 // To retrieve all messages from the server and
 // subscribe to the collection's channel
@@ -229,7 +242,10 @@ Message.all(function(messages) {
 
 If data in your server's database changes, so will your scope variables - in real time, for all connected clients.
 
-### Validations
+### Available Functions
+A number of functions is attached to Entangled JavaScript objects. They basically mimic ActiveRecord's behavior in the back end to make the database more accessible in the front end.
+
+#### Validations
 Objects from the Entangled service automatically receive ActiveRecord's error messages from your model when you `$save()`. An additional property called `errors` containing the error messages is available, formatted the same way you're used to from calling `.errors` on a model in Rails.
 
 For example, consider the following scenario:
@@ -254,18 +270,26 @@ To check if a resource is valid, you can use `$valid()` and `$invalid()`. Both f
 ```javascript
 $scope.message.$save(function() {
   // Check if record has no errors
-  if ($scope.message.$valid()) {
+  if ($scope.message.$valid()) { // similar to ActiveRecord's .valid?
     alert('Yay!');
   }
 
   // Check if record errors
-  if ($scope.message.$invalid()) {
+  if ($scope.message.$invalid()) { // similar to ActiveRecord's .invalid?
     alert('Nay!');
   }
 });
 ```
 
 Note that `$valid()` and `$invalid()` should only be used after $saving a resource, i.e. in the callback of `$save`, since they don't actually invoke server side validations. They only check if a resource contains errors.
+
+#### Persistence
+Just like with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
+
+```javascript
+$scope.message.$persisted();
+// => true or false
+```
 
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.

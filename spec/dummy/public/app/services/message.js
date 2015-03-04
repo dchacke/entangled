@@ -14,6 +14,9 @@ angular.module('entangledTest')
     },
     find: function(id, callback) {
       return entangled.find(id, callback);
+    },
+    create: function(params, callback) {
+      return entangled.create(params, callback);
     }
   };
 
