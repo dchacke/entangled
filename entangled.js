@@ -106,6 +106,12 @@ angular.module('entangled', [])
     return !this.$valid();
   };
 
+  // $persisted() checks if the record was successfully stored
+  // in the back end's database
+  Resource.prototype.$persisted = function() {
+    return !!this.id;
+  };
+
   // Resources wraps all individual Resource objects
   // in a collection.
   var Resources = function(resources, webSocketUrl) {
