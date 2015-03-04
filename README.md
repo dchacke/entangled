@@ -202,9 +202,16 @@ In your controller, you could then inject that `Message` service and use it like
 // set some default values
 $scope.message = Message.new();
 
+// To instantiate and save a message in one go
+Message.create({ body: 'text' }, function(message) {
+  $scope.$apply(function() {
+    $scope.message = message;
+  });
+});
+
 // To retrieve a specific message from the server
 // with id 1 and subscribe to its channel
-Message.find(1, function() {
+Message.find(1, function(message) {
   $scope.$apply(function() {
     $scope.message = message;
   });

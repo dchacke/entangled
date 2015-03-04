@@ -74,6 +74,13 @@ describe('MessagesCtrl', function () {
     }, 100);
   });
 
+  it('can instantiate and save a message in one go with $create', function(done) {
+    Message.create({ body: 'foo' }, function(message) {
+      expect(message.$persisted()).toBeTruthy();
+      done();
+    });
+  });
+
   it('can update an existing message', function(done) {
     setTimeout(function() {
       // Pick first message
