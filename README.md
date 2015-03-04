@@ -2,11 +2,11 @@
 
 [![Codeship Status for dchacke/entangled](https://codeship.com/projects/9fe9a790-9df7-0132-5fb8-6e77ea26735b/status?branch=master)](https://codeship.com/projects/64679)
 
-Services like Firebase are great because they provide real time data binding between client and server. But they come at a price: You give up control over your backend. Wouldn't it be great to have real time functionality but still keep your beloved Rails backend? That's where Entangled comes in.
+Services like Firebase are great because they provide real time data binding between client and server. But they come at a price: You give up control over your back end. Wouldn't it be great to have real time functionality but still keep your beloved Rails back end? That's where Entangled comes in.
 
-Entangled is a layer behind your controllers and models that pushes updates to clients subscribed to certain channels in real time. For example, if you display a list of five messages on a page, if anyone adds a sixth message, everyone who is currently looking at that page will instantly see that sixth message being added to the list.
+Entangled stores and syncs data instantly across every device. It is a layer behind your controllers and models that pushes updates to all connected clients in real time. It is cross-browser compatible and even offers real time validations.
 
-The idea is that real time data binding should be the default, not an add-on. Entangled aims at making real time features as easy to implement as possible, while at the same time making your restful controllers thinner.
+Real time data binding should be the default, not an add-on. Entangled aims at making real time features as easy to implement as possible, while at the same time making your restful controllers thinner. All this without having to give up control over your back end.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -146,13 +146,13 @@ $ redis-server
 
 Otherwise the channels won't work.
 
-If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer), Entangled will use that assigned instance so that you can configure Redis just like you're used to. Otherwise, Entangled will instantiate Redis itself and use its standard settings.
+If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer), Entangled will use that assigned instance so that you can configure Redis just like you're used to. Otherwise, Entangled will instantiate Redis itself and use its default settings.
 
 ### Database
 Depending on your app's settings, you might have to increase the pool size in your database.yml configuration file, since every new socket will open a new connection to your database.
 
 ## The Client
-You will need to configure your client to create Websockets and understand incoming requests on those sockets. If you use Angular for your frontend, you can use the Angular library from this repository. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
+You will need to configure your client to create Websockets and understand incoming requests on those sockets. If you use Angular for your front end, you can use the Angular library from this repository. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
 
 ### Installation
 You can either download or reference the file `entangled.js` from this repository, or simply install it with Bower:
@@ -250,7 +250,7 @@ $scope.message.$save(function() {
 You could then display these error messages to your users.
 
 ## Planning Your Infrastructure
-This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A frontend separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
+This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
 ## Limitations
 The gem rely's heavily on convention over configuration and currently only works with restful style controllers as shown above. More customization will be available soon.
@@ -260,7 +260,7 @@ The gem rely's heavily on convention over configuration and currently only works
 2. Run `$ bundle install` in the root of the repo
 3. Run `$ bower install` and `$ npm install` in spec/dummy/public
 4. The back end example app resides in spec/dummy; you can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`; run your tests in the root of the repo by running `$ rspec`
-5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment!
+5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment! Also remember to prepare the test database by running `$ bin/rake db:test:prepare`
 6. The Entangled Angular service resides in spec/dummy/public/app/entangled/entangled.js. This is where you can make changes to the service; a copy of it, living in /entangled.js at the root of the repo, should be kept in sync for it to be available with Bower, so it's best if you replace this file with the one from the dummy app should have made any changes to the latter
 7. Write your tests
 8. Write your feature to make the tests pass
