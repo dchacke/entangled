@@ -129,6 +129,46 @@ describe('MessagesCtrl', function () {
     }, 100);
   });
 
+  it('checks for validity with $valid()', function() {
+    var message = Message.new();
+
+    // Message should be valid without erros
+    expect(message.$valid()).toBeTruthy();
+
+    message.errors = {
+      body: ["can't be blank"]
+    };
+
+    // Message should not be valid because errors
+    // are attached
+    expect(message.$valid()).not.toBeTruthy();
+
+    // Message should be valid if errors property
+    // present but not filled
+    message.errors = {};
+    expect(message.$valid()).toBeTruthy();
+  });
+
+  it('checks for validity with $invalid()', function() {
+    var message = Message.new();
+
+    // Message should not be invalid without errors
+    expect(message.$invalid()).not.toBeTruthy();
+
+    message.errors = {
+      body: ["can't be blank"]
+    };
+
+    // Message should be invalid because errors
+    // are attached
+    expect(message.$invalid()).toBeTruthy();
+
+    // Message should not be invalid if errors property
+    // present but not filled
+    message.errors = {};
+    expect(message.$invalid()).not.toBeTruthy();
+  });
+
   it('can destroy an existing message', function(done) {
     setTimeout(function() {
       // Pick first message

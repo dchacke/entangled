@@ -92,6 +92,20 @@ angular.module('entangled', [])
     };
   };
 
+  // $valid() checks if any errors are attached to the object
+  // and return false if so, false otherwise. This doesn't actually
+  // invoke server side validations, so it should only be used
+  // after calling $save() to check if the record was successfully
+  // stored in the database
+  Resource.prototype.$valid = function() {
+    return !(this.errors && Object.keys(this.errors).length);
+  };
+
+  // $invalid() returns the opposite of $valid()
+  Resource.prototype.$invalid = function() {
+    return !this.$valid();
+  };
+
   // Resources wraps all individual Resource objects
   // in a collection.
   var Resources = function(resources, webSocketUrl) {
