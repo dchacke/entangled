@@ -238,7 +238,7 @@ Message.all(function(messages) {
 });
 ```
 
-`$save()`, `$destroy()`, `find()` and `all()` will interact with your server's controllers in real time.
+All functions above will interact with your server's controllers in real time.
 
 If data in your server's database changes, so will your scope variables - in real time, for all connected clients.
 
