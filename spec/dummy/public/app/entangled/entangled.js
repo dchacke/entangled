@@ -48,7 +48,11 @@ angular.module('entangled', [])
           }
         }
 
-        if (callback) callback();
+        // Pass 'that' to callback for create
+        // function so that the create function
+        // can pass the created resource to its
+        // own callback; not needed for $save per se
+        if (callback) callback(that);
       };
     } else {
       // Create
@@ -73,7 +77,11 @@ angular.module('entangled', [])
           }
         }
 
-        if (callback) callback();
+        // Pass 'that' to callback for create
+        // function so that the create function
+        // can pass the created resource to its
+        // own callback; not needed for $save per se
+        if (callback) callback(that);
       };
     }
   };
@@ -199,6 +207,12 @@ angular.module('entangled', [])
       // resulting collection
       callback(this.resources.all);
     };
+  };
+
+  // Instantiate and persist a record in one go
+  Entangled.prototype.create = function(params, callback) {
+    var resource = this.new(params);
+    resource.$save(callback);
   };
 
   // Find an individual Resource on the server
