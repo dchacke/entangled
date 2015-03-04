@@ -249,6 +249,24 @@ $scope.message.$save(function() {
 
 You could then display these error messages to your users.
 
+To check if a resource is valid, you can use `$valid()` and `$invalid()`. Both functions return booleans. For example:
+
+```javascript
+$scope.message.$save(function() {
+  // Check if record has no errors
+  if ($scope.message.$valid()) {
+    alert('Yay!');
+  }
+
+  // Check if record errors
+  if ($scope.message.$invalid()) {
+    alert('Nay!');
+  }
+});
+```
+
+Note that `$valid()` and `$invalid()` should only be used after $saving a resource, i.e. in the callback of `$save`, since they don't actually invoke server side validations. They only check if a resource contains errors.
+
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
