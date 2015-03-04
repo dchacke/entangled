@@ -215,6 +215,14 @@ Message.find(1, function(message) {
   });
 });
 
+// To retrieve all messages from the server and
+// subscribe to the collection's channel
+Message.all(function(messages) {
+  $scope.$apply(function() {
+    $scope.messages = messages;
+  });
+});
+
 // To store a newly instantiated or update an existing message.
 // If saved successfully, scope.message is updated with the
 // attributes id, created_at and updated_at
@@ -225,14 +233,6 @@ $scope.message.$save(function() {
 // To destroy a message
 $scope.message.$destroy(function() {
   // Do stuff after destroy
-});
-
-// To retrieve all messages from the server and
-// subscribe to the collection's channel
-Message.all(function(messages) {
-  $scope.$apply(function() {
-    $scope.messages = messages;
-  });
 });
 ```
 
