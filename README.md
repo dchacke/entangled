@@ -213,10 +213,14 @@ Message.find(1, function() {
 // To store a newly instantiated or update an existing message.
 // If saved successfully, scope.message is updated with the
 // attributes id, created_at and updated_at
-$scope.message.$save();
+$scope.message.$save(function() {
+  // Do stuff after save
+});
 
 // To destroy a message
-$scope.message.$destroy();
+$scope.message.$destroy(function() {
+  // Do stuff after destroy
+});
 
 // To retrieve all messages from the server and
 // subscribe to the collection's channel
