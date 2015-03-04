@@ -174,25 +174,23 @@ Entangled is best used within Angular services. For example, consider a `Message
 
 ```javascript
 app.factory('Message', function(Entangled) {
-  var entangled = new Entangled('ws://localhost:3000/messages');
-
-  var Message = {
-    new: function(params) {
-      return entangled.new(params);
-    },
-    all: function(callback) {
-      return entangled.all(callback);
-    },
-    find: function(id, callback) {
-      return entangled.find(id, callback);
-    }
-  };
-
-  return Message;
+  return new Entangled('ws://localhost:3000/messages');
 });
 ```
 
-In the above example, first we inject Entangled into our service, then instantiate a new Entangled object. The Entangled object takes one argument when instantiated: the URL of your resource's index route (in this case, `/messages`). Then we add helper methods to our service. Note that the socket URL looks just like a standard restful URL with http, except that the protocol part has been switched with `ws` to use the websocket protocol. Also note that you need to use `wss` instead if you want to use SSL.
+In the above example, first we inject Entangled into our service, then instantiate a new Entangled object and return it. The Entangled object takes one argument when instantiated: the URL of your resource's index action (in this case, `/messages`). Note that the socket URL looks just like a standard restful URL with http, except that the protocol part has been switched with `ws` to use the websocket protocol. Also note that you need to use `wss` instead if you want to use SSL.
+
+The Entangled service come with the functions:
+
+- `new(params)`
+- `create(params, callback)`
+- `find(id, callback)`
+- `all(callback)`
+
+...and the following functions on a returned object:
+
+- `$save(callback)`
+- `$destroy(callback)`
 
 In your controller, you could then inject that `Message` service and use it like so:
 
@@ -217,6 +215,14 @@ Message.find(1, function(message) {
   });
 });
 
+// To retrieve all messages from the server and
+// subscribe to the collection's channel
+Message.all(function(messages) {
+  $scope.$apply(function() {
+    $scope.messages = messages;
+  });
+});
+
 // To store a newly instantiated or update an existing message.
 // If saved successfully, scope.message is updated with the
 // attributes id, created_at and updated_at
@@ -227,14 +233,6 @@ $scope.message.$save(function() {
 // To destroy a message
 $scope.message.$destroy(function() {
   // Do stuff after destroy
-});
-
-// To retrieve all messages from the server and
-// subscribe to the collection's channel
-Message.all(function(messages) {
-  $scope.$apply(function() {
-    $scope.messages = messages;
-  });
 });
 ```
 
