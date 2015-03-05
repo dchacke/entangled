@@ -86,6 +86,20 @@ angular.module('entangled', [])
     }
   };
 
+  // $update() updates a record in place
+  Resource.prototype.$update = function(params, callback) {
+    // Update object in memory
+    for (var key in params) {
+      // Skip inherent object properties
+      if (params.hasOwnProperty(key)) {
+        this[key] = params[key];
+      }
+    }
+
+    // Save object
+    this.$save(callback);
+  };
+
   // $destroy() will send a request to the server to
   // destroy an existing record.
   Resource.prototype.$destroy = function(callback) {

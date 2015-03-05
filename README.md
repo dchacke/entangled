@@ -180,16 +180,17 @@ app.factory('Message', function(Entangled) {
 
 In the above example, first we inject Entangled into our service, then instantiate a new Entangled object and return it. The Entangled object takes one argument when instantiated: the URL of your resource's index action (in this case, `/messages`). Note that the socket URL looks just like a standard restful URL with http, except that the protocol part has been switched with `ws` to use the websocket protocol. Also note that you need to use `wss` instead if you want to use SSL.
 
-The Entangled service come with the functions:
+The Entangled service come with these functions:
 
 - `new(params)`
 - `create(params, callback)`
 - `find(id, callback)`
 - `all(callback)`
 
-...and the following functions on a returned object:
+...and the following functions on returned objects:
 
 - `$save(callback)`
+- `$update(params, callback)`
 - `$destroy(callback)`
 
 In your controller, you could then inject that `Message` service and use it like so:
@@ -226,8 +227,14 @@ Message.all(function(messages) {
 // To store a newly instantiated or update an existing message.
 // If saved successfully, scope.message is updated with the
 // attributes id, created_at and updated_at
+$scope.message.body = 'new body';
 $scope.message.$save(function() {
   // Do stuff after save
+});
+
+// To update a newly instantiated or existing message in place
+$scope.message.$update({ body: 'new body' }, function() {
+  // Do stuff after update
 });
 
 // To destroy a message
