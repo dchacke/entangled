@@ -225,14 +225,16 @@ Message.all(function(messages) {
 });
 
 // To store a newly instantiated or update an existing message.
-// If saved successfully, scope.message is updated with the
-// attributes id, created_at and updated_at
+// If saved successfully, $scope.message is updated in place
+// with the attributes id, created_at and updated_at
 $scope.message.body = 'new body';
 $scope.message.$save(function() {
   // Do stuff after save
 });
 
-// To update a newly instantiated or existing message in place
+// To update a newly instantiated or existing message in place.
+// If updated successfully, $scope.message is updated in place
+// with the attributes id, created_at and updated_at
 $scope.message.$update({ body: 'new body' }, function() {
   // Do stuff after update
 });
