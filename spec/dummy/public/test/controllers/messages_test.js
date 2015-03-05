@@ -37,12 +37,17 @@ describe('MessagesCtrl', function () {
   });
 
   it('can find a message', function(done) {
-    setTimeout(function() {
-      Message.find(scope.messages[0].id, function(message) {
+    // Create message
+    Message.create({ body: 'foo' }, function(message) {
+      // Assert creation was successful
+      expect(message.$persisted()).toBeTruthy();
+
+      // Find message
+      Message.find(message.id, function(message) {
         expect(message).toBeDefined();
         done();
-      })
-    }, 100);
+      });
+    });
   });
 
   it('can save the blank message', function(done) {
@@ -208,5 +213,26 @@ describe('MessagesCtrl', function () {
     var message = Message.new({ id: undefined });
 
     expect(message.$persisted()).not.toBeTruthy();
+  });
+
+  it('can update a message in place', function(done) {
+    // Create message
+    Message.create({ body: 'foo' }, function(message) {
+      // Assert that creation was successful
+      expect(message.$persisted()).toBeTruthy();
+
+      // Remember updated_at
+      var oldUpdatedAt = message.updated_at;
+
+      // Update
+      message.$update({ body: 'new body' }, function() {
+        // Assert that body was updated
+        expect(message.body).toBe('new body');
+
+        // Assert that updated_at is new
+        expect(message.updated_at).not.toEqual(oldUpdatedAt);
+        done();
+      })
+    });
   });
 });
