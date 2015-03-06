@@ -2,13 +2,9 @@
 
 [![Codeship Status for dchacke/entangled](https://codeship.com/projects/9fe9a790-9df7-0132-5fb8-6e77ea26735b/status?branch=master)](https://codeship.com/projects/64679)
 
-Real time is important. Users have come to expect real time behavior from every website, because they want to see the latest data without having to reload the page. And they're right - real time increases their engagement, provides better context of the data they're seeing, and makes collaboration easier. But how do you make your website real time?
+Real time is important. Users have come to expect real time behavior from every website, because they want to see the latest data without having to reload the page. Real time increases their engagement, provides better context of the data they're seeing, and makes collaboration easier.
 
-Services like Firebase are great because they provide real time data binding between client and server. But they come at a price: You give up control over your back end, because they want to sell their proprietary solution. Wouldn't it be great to have real time functionality for free and still keep your beloved Rails back end? That's where Entangled comes in.
-
-Entangled stores and syncs data instantly across every device. It is a layer behind your controllers and models that pushes updates to all connected clients in real time. It is cross-browser compatible and even offers real time validations.
-
-Real time data binding should be the default, not an add-on. Entangled aims at making real time features as easy to implement as possible, while at the same time making your restful controllers thinner. All this without having to give up control over your back end.
+Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
 
 ## Installation
 Add this line to your application's Gemfile:
