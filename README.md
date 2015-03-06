@@ -2,9 +2,11 @@
 
 [![Codeship Status for dchacke/entangled](https://codeship.com/projects/9fe9a790-9df7-0132-5fb8-6e77ea26735b/status?branch=master)](https://codeship.com/projects/64679)
 
-Real time is important. Users have come to expect real time behavior from every website, because they want to see the latest data without having to reload the page. Real time increases their engagement, provides better context of the data they're seeing, and makes collaboration easier.
+Real time is important. Users have come to expect real time behavior from every website, because they want to see the latest data without having to reload the page. Real time increases their engagement, provides better context for the data they're seeing, and makes collaboration easier.
 
 Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
+
+Currently, Entangled runs on Rails 4.2 in the back end and Angular in the front end.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -128,7 +130,7 @@ end
 
 Note the following:
 
-- All methods are wrapped in a new `broadcast` block needed to send messages to connected clients
+- All methods are wrapped in a new `broadcast` block needed to receive and send data to connected clients
 - The `index` method will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
 - The `show`, `create` and `update` methods will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
 - Data sent to clients arrives as stringified JSON
@@ -150,7 +152,7 @@ If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer)
 Depending on your app's settings, you might have to increase the pool size in your database.yml configuration file, since every new socket will open a new connection to your database.
 
 ## The Client
-You will need to configure your client to create Websockets and understand incoming requests on those sockets. If you use Angular for your front end, you can use the Angular library from this repository. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
+You will need to configure your client to create Websockets and understand incoming requests on those sockets. In order to use the helper methods for the front end provided by the Entangled Angular library, you must use Angular in your front end. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
 
 ### Installation
 You can either download or reference the file `entangled.js` from this repository, or simply install it with Bower:
@@ -178,7 +180,7 @@ app.factory('Message', function(Entangled) {
 
 In the above example, first we inject Entangled into our service, then instantiate a new Entangled object and return it. The Entangled object takes one argument when instantiated: the URL of your resource's index action (in this case, `/messages`). Note that the socket URL looks just like a standard restful URL with http, except that the protocol part has been switched with `ws` to use the websocket protocol. Also note that you need to use `wss` instead if you want to use SSL.
 
-The Entangled service come with these functions:
+The Entangled service comes with these functions:
 
 - `new(params)`
 - `create(params, callback)`
@@ -243,12 +245,7 @@ $scope.message.$destroy(function() {
 });
 ```
 
-All functions above will interact with your server's controllers in real time.
-
-If data in your server's database changes, so will your scope variables - in real time, for all connected clients.
-
-### Available Functions
-A number of functions is attached to Entangled JavaScript objects. They basically mimic ActiveRecord's behavior in the back end to make the database more accessible in the front end.
+All functions above will interact with your server's controllers in real time. Your scope variables will always reflect your server's most current data.
 
 #### Validations
 Objects from the Entangled service automatically receive ActiveRecord's error messages from your model when you `$save()`. An additional property called `errors` containing the error messages is available, formatted the same way you're used to from calling `.errors` on a model in Rails.
@@ -289,7 +286,7 @@ $scope.message.$save(function() {
 Note that `$valid()` and `$invalid()` should only be used after $saving a resource, i.e. in the callback of `$save`, since they don't actually invoke server side validations. They only check if a resource contains errors.
 
 #### Persistence
-Just like with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
+Just as with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
 
 ```javascript
 $scope.message.$persisted();
@@ -300,16 +297,28 @@ $scope.message.$persisted();
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
 ## Limitations
-The gem rely's heavily on convention over configuration and currently only works with restful style controllers as shown above. More customization will be available soon.
+The gem relies heavily on convention over configuration and currently only works with restful style controllers as shown above. More features will be available soon, such as associations, authentication, and more.
+
+## Development Priorities
+The following features are to be implemented next:
+
+- Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
+- Support for authentication
+- Remove angular dependencies from bower package (they're currently all being downloaded as well when doing bower install)
+- On Heroku (maybe in production in general), objects are always in different order depending on their attributes
+- Add $onChange listener to objects
+- Add diagram on how it works to Readme
+- Reuse open DB connections to reduce pool-size - currently, a new db connection is established for every request, which quickly gets out of hand. Only one DB connection should be opened and maintained per client
+- Check if Rails 4.0.0 supported too
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
 2. Run `$ bundle install` in the root of the repo
 3. Run `$ bower install` and `$ npm install` in spec/dummy/public
-4. The back end example app resides in spec/dummy; you can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`; run your tests in the root of the repo by running `$ rspec`
-5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment! Also remember to prepare the test database by running `$ bin/rake db:test:prepare`
-6. The Entangled Angular service resides in spec/dummy/public/app/entangled/entangled.js. This is where you can make changes to the service; a copy of it, living in /entangled.js at the root of the repo, should be kept in sync for it to be available with Bower, so it's best if you replace this file with the one from the dummy app should have made any changes to the latter
-7. Write your tests
+4. The back end example app resides in spec/dummy. You can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`. Run your Rails tests in the root of the repo by running `$ rspec`
+5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment. Also remember to prepare the test database by running `$ bin/rake db:test:prepare`
+6. The Entangled Angular service resides in spec/dummy/public/app/entangled/entangled.js. This is where you can make changes to the service. A copy of it, living in /entangled.js at the root of the repo, should be kept in sync for it to be available with Bower. Once you're done editing spec/dummy/public/app/entangled/entangled.js, copy it over to /entangled.js
+7. Write your tests. Test coverage is required
 8. Write your feature to make the tests pass
 9. Stage and commit your changes
 10. Push to a new feature branch in your repo
