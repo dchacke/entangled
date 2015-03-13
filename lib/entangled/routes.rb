@@ -35,11 +35,9 @@ module ActionDispatch::Routing
     end
 
     def draw_all
-      draw_index
-      draw_create
-      draw_show
-      draw_destroy
-      draw_update
+      default_options.each do |option|
+        send :"draw_#{option}"
+      end
     end
 
     def draw_index
