@@ -12,8 +12,8 @@ RSpec.describe MessagesController, type: :routing do
   end
 
   describe '#create' do
-    it 'matches the create_message_path' do
-      expect(create_message_path).to eq '/messages/create'
+    it 'matches the create_messages_path' do
+      expect(create_messages_path).to eq '/messages/create'
     end
 
     it 'routes to #create' do

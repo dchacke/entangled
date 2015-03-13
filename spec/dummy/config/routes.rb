@@ -8,4 +8,9 @@ Rails.application.routes.draw do
   sockets_for :bars, only: [:index, :show]
   sockets_for :foobars, except: :index
   sockets_for :barfoos, except: [:index, :show]
+
+  # Test nested routes
+  sockets_for :lists do
+    sockets_for :items
+  end
 end
