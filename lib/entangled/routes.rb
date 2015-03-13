@@ -1,63 +1,89 @@
 module ActionDispatch::Routing
   class Mapper
     private
-    def sockets_for(resource, options = {})
-      @resources = resource.to_s.underscore.pluralize.to_sym
-      @resource = resource.to_s.underscore.singularize.to_sym
 
-      if options.any?
-        if options[:only]
-          if options[:only].is_a? Symbol
-            send :"draw_#{options[:only]}"
-          elsif options[:only].is_a? Array
-            options[:only].each do |option|
-              send :"draw_#{option}"
-            end
-          end
-        elsif options[:except]
-          if options[:except].is_a? Symbol
-            (default_options - [options[:except]]).each do |option|
-              send :"draw_#{option}"
-            end
-          elsif options[:except].is_a? Array
-            (default_options - options[:except]).each do |option|
-              send :"draw_#{option}"
-            end
-          end
+    # Generates five routes that all use GET requests.
+    # For example:
+    # 
+    #   sockets_for :messages
+    # 
+    # will create the following routes:
+    # 
+    #          Prefix Verb URI Pattern                     Controller#Action
+    # create_messages GET  /messages/create(.:format)      messages#create
+    #  update_message GET  /messages/:id/update(.:format)  messages#update
+    # destroy_message GET  /messages/:id/destroy(.:format) messages#destroy
+    #        messages GET  /messages(.:format)             messages#index
+    #         message GET  /messages/:id(.:format)         messages#show
+    # 
+    # This method can nested by passing a block, and
+    # the options :only and :except can be used just like
+    # with the method 'resources'
+    def sockets_for(*args, &block)
+      options = args.extract_options!
+      routes = infer_routes(options)
+      resource_routes = infer_resource_routes(routes)
+
+      # Generate index and show routes
+      resources *args, only: resource_routes do
+        # Generate create route
+        collection do
+          get 'create', as: :create if routes.include?(:create)
         end
-      else
-        draw_all
+
+        # Generate update and destroy routes
+        member do
+          get 'update', as: :update if routes.include?(:update)
+          get 'destroy', as: :destroy if routes.include?(:destroy)
+        end
+
+        # Nest routes
+        yield if block_given?
       end
     end
 
-    def default_options
+    def default_routes
       [:index, :create, :show, :destroy, :update]
     end
 
-    def draw_all
-      default_options.each do |option|
-        send :"draw_#{option}"
+    # Find out which routes should be generated
+    # inside resources method. These can be :create,
+    # :update, and :destroy, and are the ones that
+    # need to be overridden to use GET requests
+    # instead of PATCH, POST and DELETE
+    def infer_routes(options)
+      if options.any?
+        if options[:only]
+          if options[:only].is_a?(Symbol)
+            routes = [options[:only]]
+          elsif options[:only].is_a?(Array)
+            routes = options[:only]
+          end
+        elsif options[:except]
+          if options[:except].is_a?(Symbol)
+            routes = default_routes - [options[:except]]
+          elsif options[:except].is_a?(Array)
+            routes = default_routes - options[:except]
+          end
+        end
+      else
+        routes = default_routes
       end
+
+      routes
     end
 
-    def draw_index
-      get :"/#{@resources}", to: "#{@resources}#index", as: @resources
-    end
+    # Find out if the resources method should create
+    # :index and :show routes. These two do not need
+    # to be overridden since they use GET requests
+    # by default
+    def infer_resource_routes(routes)
+      resource_routes = []
 
-    def draw_create
-      get :"/#{@resources}/create", to: "#{@resources}#create", as: :"create_#{@resource}"
-    end
+      resource_routes << :index if routes.include?(:index)
+      resource_routes << :show if routes.include?(:show)
 
-    def draw_show
-      get :"/#{@resources}/:id", to: "#{@resources}#show", as: @resource
-    end
-
-    def draw_destroy
-      get :"/#{@resources}/:id/destroy", to: "#{@resources}#destroy", as: :"destroy_#{@resource}"
-    end
-
-    def draw_update
-      get :"/#{@resources}/:id/update", to: "#{@resources}#update", as: :"update_#{@resource}"
+      resource_routes
     end
   end
 end
