@@ -6,9 +6,17 @@ RSpec.describe Message, type: :model do
   end
 
   describe 'Methods' do
-    describe '.inferred_channel_name' do
+    describe '.channel' do
       it 'is the underscore, pluralized model name' do
-        expect(Message.inferred_channel_name).to eq 'messages'
+        expect(Message.channel).to eq 'messages'
+      end
+    end
+
+    describe '#channel' do
+      let(:message) { Message.create(body: 'foo') }
+
+      it "is the class's channel name plus the member as param" do
+        expect(message.channel).to eq "messages/#{message.to_param}"
       end
     end
 
@@ -27,7 +35,7 @@ RSpec.describe Message, type: :model do
           redis = stub_redis
 
           expect(redis).to have_received(:publish).with(
-            'messages', {
+            Message.channel, {
               action: :create,
               resource: message
             }.to_json
@@ -38,7 +46,7 @@ RSpec.describe Message, type: :model do
           redis = stub_redis
 
           expect(redis).to have_received(:publish).with(
-            "messages/#{message.to_param}", {
+            message.channel, {
               action: :create,
               resource: message
             }.to_json
@@ -55,7 +63,7 @@ RSpec.describe Message, type: :model do
           message.update(body: 'bar')
 
           expect(redis).to have_received(:publish).with(
-            'messages', {
+            Message.channel, {
               action: :update,
               resource: message
             }.to_json
@@ -68,7 +76,7 @@ RSpec.describe Message, type: :model do
           message.update(body: 'bar')
 
           expect(redis).to have_received(:publish).with(
-            "messages/#{message.to_param}", {
+            message.channel, {
               action: :update,
               resource: message
             }.to_json
@@ -85,7 +93,7 @@ RSpec.describe Message, type: :model do
           message.destroy
 
           expect(redis).to have_received(:publish).with(
-            'messages', {
+            Message.channel, {
               action: :destroy,
               resource: message
             }.to_json
@@ -98,7 +106,7 @@ RSpec.describe Message, type: :model do
           message.destroy
 
           expect(redis).to have_received(:publish).with(
-            "messages/#{message.to_param}", {
+            message.channel, {
               action: :destroy,
               resource: message
             }.to_json

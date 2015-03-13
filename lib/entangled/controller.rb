@@ -30,13 +30,17 @@ module Entangled
       # Channel name for collection of resources, used in index
       # action
       def collection_channel
-        resources_name
+        model.channel
+      end
+
+      # The model for this controller. E.g. Taco for a TacosController
+      def model
+        controller_name.classify.constantize
       end
 
       # Channel name for single resource, used in show action
       def member_channel
-        instance = member
-        "#{resources_name}/#{instance.to_param}"
+        member.channel
       end
 
       def collection
