@@ -57,7 +57,7 @@ module Entangled
 
       # The inferred channel name. For example, if the class name
       # is DeliciousTaco, the inferred channel name is "delicious_tacos"
-      def inferred_channel_name
+      def channel
         name.underscore.pluralize
       end
 
@@ -79,6 +79,15 @@ module Entangled
         attributes.merge(errors: errors).as_json
       end
 
+      # The inferred channel name for a single record
+      # containing the inferred channel name from the class
+      # and the record's id. For example, if it's a
+      # DeliciousTaco with the id 1, the inferred channel
+      # name for the single record is "delicious_tacos/1"
+      def channel
+        "#{self.class.channel}/#{self.to_param}"
+      end
+
       private
 
       # Publishes to client. Whoever is subscribed
@@ -86,23 +95,14 @@ module Entangled
       # gets the message
       def publish(action)
         redis.publish(
-          self.class.inferred_channel_name,
+          self.class.channel,
           json(action)
         )
 
         redis.publish(
-          inferred_channel_name_for_single_record,
+          channel,
           json(action)
         )
-      end
-
-      # The inferred channel name for a single record
-      # containing the inferred channel name from the class
-      # and the record's id. For example, if it's a
-      # DeliciousTaco with the id 1, the inferred channel
-      # name for the single record is "delicious_tacos/1"
-      def inferred_channel_name_for_single_record
-        "#{self.class.inferred_channel_name}/#{to_param}"
       end
 
       # JSON containing the type of action (:create, :update
