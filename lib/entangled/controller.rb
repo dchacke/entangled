@@ -27,15 +27,19 @@ module Entangled
         resources_name.singularize
       end
 
-      # Channel name for collection of resources, used in index
-      # action
-      def collection_channel
-        model.channel
-      end
-
       # The model for this controller. E.g. Taco for a TacosController
       def model
         controller_name.classify.constantize
+      end
+
+      # Grabs @tacos
+      def collection
+        instance_variable_get(:"@#{resources_name}")
+      end
+
+      # Grabs @taco
+      def member
+        instance_variable_get(:"@#{resource_name}")
       end
 
       # Channel name for single resource, used in show action
@@ -43,12 +47,20 @@ module Entangled
         member.channel
       end
 
-      def collection
-        instance_variable_get(:"@#{resources_name}")
+      # Channel name for collection of resources, used in index
+      # action
+      def collection_channel
+        model.channel
       end
 
-      def member
-        instance_variable_get(:"@#{resource_name}")
+      # Close the connection to the DB so as to
+      # not exceed the pool size. Otherwise, too many
+      # connections will be leaked and the pool
+      # will be exceeded
+      def close_db_connection
+        if ActiveRecord::Base.connection
+          ActiveRecord::Base.connection.close
+        end
       end
 
       # Broadcast events to every connected client
@@ -92,6 +104,8 @@ module Entangled
                   tubesock.send_data({
                     resources: collection
                   }.to_json)
+
+                  close_db_connection
                 end
               end
 
@@ -131,6 +145,8 @@ module Entangled
                   tubesock.send_data({
                     resource: member
                   }.to_json)
+
+                  close_db_connection
                 end
               end
 
@@ -158,6 +174,8 @@ module Entangled
                   resource: member
                 }.to_json)
               end
+
+              close_db_connection
             end
 
           # If the controller's action name is 'update', a record should be
@@ -177,6 +195,8 @@ module Entangled
                   resource: member
                 }.to_json)
               end
+
+              close_db_connection
             end
 
           # For every other controller action, simply wrap whatever is
@@ -186,6 +206,8 @@ module Entangled
           else
             tubesock.onmessage do |m|
               yield
+
+              close_db_connection
             end
           end
         end

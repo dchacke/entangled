@@ -165,9 +165,6 @@ Otherwise the channels won't work.
 
 If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer), Entangled will use that assigned instance so that you can configure Redis just like you're used to. Otherwise, Entangled will instantiate Redis itself and use its default settings.
 
-### Database
-Depending on your app's settings, you might have to increase the pool size in your database.yml configuration file, since every new socket will open a new connection to your database.
-
 ## The Client
 You will need to configure your client to create Websockets and understand incoming requests on those sockets. In order to use the helper methods for the front end provided by the Entangled Angular library, you must use Angular in your front end. The use of Angular as counterpart of this gem is highly recommended, since its inherent two way data binding complements the real time functionality of this gem nicely.
 
@@ -326,7 +323,6 @@ The following features are to be implemented next:
 - On Heroku (maybe in production in general), objects are always in different order depending on their attributes
 - Add $onChange listener to objects
 - Add diagram on how it works to Readme
-- Reuse open DB connections to reduce pool-size - currently, a new db connection is established for every request, which quickly gets out of hand. Only one DB connection should be opened and maintained per client
 - Check if Rails 4.0.0 supported too
 
 ## Contributing
