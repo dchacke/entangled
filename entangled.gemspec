@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bundler', '~> 1.7'
   s.add_development_dependency 'rake', '~> 10.0'
   s.add_development_dependency 'rspec-rails', '~> 3.2'
+  s.add_development_dependency 'shoulda-matchers', '~> 2.6'
   s.add_development_dependency 'sqlite3', '~> 1.3'
   s.add_development_dependency 'byebug', '~> 3.5'
   s.add_development_dependency 'bourne', '~> 1.6'

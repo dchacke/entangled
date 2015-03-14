@@ -44,13 +44,13 @@ module Entangled
 
       # Channel name for single resource, used in show action
       def member_channel
-        member.channel
+        member.member_channel
       end
 
       # Channel name for collection of resources, used in index
       # action
       def collection_channel
-        model.channel
+        collection.name.constantize.new.collection_channel
       end
 
       # Close the connection to the DB so as to

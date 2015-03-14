@@ -16,7 +16,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to collection channel
       expect(redis).to have_received(:publish).with(
-        'foos', {
+        foo.collection_channel, {
           action: :create,
           resource: foo
         }.to_json
@@ -24,7 +24,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to member channel
       expect(redis).to have_received(:publish).with(
-        "foos/#{foo.to_param}", {
+        foo.member_channel, {
           action: :create,
           resource: foo
         }.to_json
@@ -44,7 +44,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       ).never
 
       expect(redis).to have_received(:publish).with(
-        "foos/#{foo.to_param}", {
+        foo.member_channel, {
           action: :update,
           resource: foo
         }.to_json
@@ -64,7 +64,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       ).never
 
       expect(redis).to have_received(:publish).with(
-        "foos/#{foo.to_param}", {
+        foo.member_channel, {
           action: :destroy,
           resource: foo
         }.to_json
@@ -80,7 +80,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to collection channel
       expect(redis).to have_received(:publish).with(
-        'bars', {
+        bar.collection_channel, {
           action: :create,
           resource: bar
         }.to_json
@@ -88,7 +88,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to member channel
       expect(redis).to have_received(:publish).with(
-        "bars/#{bar.to_param}", {
+        bar.member_channel, {
           action: :create,
           resource: bar
         }.to_json
@@ -101,14 +101,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       bar.update(body: 'bar')
 
       expect(redis).to have_received(:publish).with(
-        'bars', {
+        bar.collection_channel, {
           action: :update,
           resource: bar
         }.to_json
       )
 
       expect(redis).to have_received(:publish).with(
-        "bars/#{bar.to_param}", {
+        bar.member_channel, {
           action: :update,
           resource: bar
         }.to_json
@@ -121,14 +121,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       bar.destroy
 
       expect(redis).to have_received(:publish).with(
-        'bars', {
+        bar.collection_channel, {
           action: :destroy,
           resource: bar
         }.to_json
       ).never
 
       expect(redis).to have_received(:publish).with(
-        "bars/#{bar.to_param}", {
+        bar.member_channel, {
           action: :destroy,
           resource: bar
         }.to_json
@@ -144,7 +144,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to collection channel
       expect(redis).to have_received(:publish).with(
-        'foobars', {
+        foobar.collection_channel, {
           action: :create,
           resource: foobar
         }.to_json
@@ -152,7 +152,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to member channel
       expect(redis).to have_received(:publish).with(
-        "foobars/#{foobar.to_param}", {
+        foobar.member_channel, {
           action: :create,
           resource: foobar
         }.to_json
@@ -165,14 +165,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       foobar.update(body: 'foobar')
 
       expect(redis).to have_received(:publish).with(
-        'foobars', {
+        foobar.collection_channel, {
           action: :update,
           resource: foobar
         }.to_json
       )
 
       expect(redis).to have_received(:publish).with(
-        "foobars/#{foobar.to_param}", {
+        foobar.member_channel, {
           action: :update,
           resource: foobar
         }.to_json
@@ -185,14 +185,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       foobar.destroy
 
       expect(redis).to have_received(:publish).with(
-        'foobars', {
+        foobar.collection_channel, {
           action: :destroy,
           resource: foobar
         }.to_json
       )
 
       expect(redis).to have_received(:publish).with(
-        "foobars/#{foobar.to_param}", {
+        foobar.member_channel, {
           action: :destroy,
           resource: foobar
         }.to_json
@@ -208,7 +208,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to collection channel
       expect(redis).to have_received(:publish).with(
-        'barfoos', {
+        barfoo.collection_channel, {
           action: :create,
           resource: barfoo
         }.to_json
@@ -216,7 +216,7 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       # Publishing to member channel
       expect(redis).to have_received(:publish).with(
-        "barfoos/#{barfoo.to_param}", {
+        barfoo.member_channel, {
           action: :create,
           resource: barfoo
         }.to_json
@@ -229,14 +229,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       barfoo.update(body: 'barfoo')
 
       expect(redis).to have_received(:publish).with(
-        'barfoos', {
+        barfoo.collection_channel, {
           action: :update,
           resource: barfoo
         }.to_json
       ).never
 
       expect(redis).to have_received(:publish).with(
-        "barfoos/#{barfoo.to_param}", {
+        barfoo.member_channel, {
           action: :update,
           resource: barfoo
         }.to_json
@@ -249,14 +249,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       barfoo.destroy
 
       expect(redis).to have_received(:publish).with(
-        'barfoos', {
+        barfoo.collection_channel, {
           action: :destroy,
           resource: barfoo
         }.to_json
       ).never
 
       expect(redis).to have_received(:publish).with(
-        "barfoos/#{barfoo.to_param}", {
+        barfoo.member_channel, {
           action: :destroy,
           resource: barfoo
         }.to_json
