@@ -6,7 +6,7 @@ Real time is important. Users have come to expect real time behavior from every 
 
 Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
 
-Currently, Entangled runs on Rails 4.2 in the back end and Angular in the front end.
+Currently, Entangled runs on Rails 4.2 in the back end and Angular 1.3 in the front end.
 
 ## Installation
 Add this line to your application's Gemfile:
