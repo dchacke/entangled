@@ -43,24 +43,40 @@ sockets_for :messages
 
 Under the hood, this creates the following routes:
 
-```ruby
-get '/messages', to: 'messages#index', as: :messages
-get '/messages/create', to: 'messages#create', as: :create_message
-get '/messages/:id', to: 'messages#show', as: :message
-get '/messages/:id/destroy', to: 'messages#destroy', as: :destroy_message
-get '/messages/:id/update', to: 'messages#update', as: :update_message
+```shell
+         Prefix Verb URI Pattern                      Controller#Action
+       messages GET  /messages(.:format)              messages#index
+        message GET  /messages/:id(.:format)          messages#show
+create_messages GET  /messages/create(.:format)       messages#create
+ update_message GET  /messages/:id/update(.:format)   messages#update
+destroy_message GET  /messages/:id/destroy(.:format)  messages#destroy
 ```
 
-The options `:only` and `:except` are available just like when using `resources`, so you can say something like:
+Note that websockets don't speak HTTP, so only GET requests are available. That's why these routes deviate slightly from restful routes. Also note that there are no `edit` and `new` actions, since an Entangled controller is only concerned with rendering data, not views.
+
+You can use `sockets_for` just like `resources`, including the following features:
 
 ```ruby
-sockets_for :messages, only: :index # or use an array
-```
+# Inclusion/exclusion
+sockets_for :messages, only: :index
+sockets_for :messages, only: [:index, :show]
 
-Note that Websockets don't speak HTTP, so only GET requests are available. That's why these routes deviate slightly from restful routes. Also note that there are no `edit` and `new` actions, since an Entangled controller is only concerned with rendering data, not views.
+sockets_for :messages, except: :index
+sockets_for :messages, except: [:index, :show]
+
+# Nesting
+sockets_for :parents do
+  sockets_for :children
+end
+
+# Multiple routes at once
+sockets_for :foos, :bars
+
+# ...etc
+```
 
 ### Models
-Add the following to the top inside your model (e.g., a `Message` model):
+Add the following to the top of your model (e.g., a `Message` model):
 
 ```ruby
 class Message < ActiveRecord::Base
@@ -80,7 +96,8 @@ By default, the following callbacks will be added:
 You can limit this behavior by specifying `:only` or `:except` options. For example, if you don't want to propagate the destruction or update of an object to all connected clients, you can do the following:
 
 ```ruby
-entangle only: :create # or use an array
+entangle only: :create
+entangled only: [:create, :update]
 ```
 
 ### Controllers
@@ -304,6 +321,7 @@ The following features are to be implemented next:
 
 - Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
 - Support for authentication
+- Support for associations
 - Remove angular dependencies from bower package (they're currently all being downloaded as well when doing bower install)
 - On Heroku (maybe in production in general), objects are always in different order depending on their attributes
 - Add $onChange listener to objects
