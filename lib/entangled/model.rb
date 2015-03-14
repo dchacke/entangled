@@ -94,11 +94,13 @@ module Entangled
       # to the model's channel or the record's channel
       # gets the message
       def publish(action)
+        # Publish to model's channel
         redis.publish(
           self.class.channel,
           json(action)
         )
 
+        # Publish to record#s channel
         redis.publish(
           channel,
           json(action)
