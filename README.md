@@ -319,7 +319,6 @@ The following features are to be implemented next:
 - Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
 - Support for authentication
 - Support for associations
-- Remove angular dependencies from bower package (they're currently all being downloaded as well when doing bower install)
 - On Heroku (maybe in production in general), objects are always in different order depending on their attributes
 - Add $onChange listener to objects
 - Add diagram on how it works to Readme
