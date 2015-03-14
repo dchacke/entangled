@@ -10,7 +10,6 @@ angular.module('entangledTest')
   Message.find($routeParams.id, function(message) {
     $scope.$apply(function() {
       $scope.message = message;
-      console.log('Show callback called!');
     });
   });
 });
