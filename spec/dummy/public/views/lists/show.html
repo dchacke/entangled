@@ -2,8 +2,15 @@
 
 <h2>{{ list.name }}</h2>
 
-<ul>
-  <li ng-repeat="item in items">
-    {{ item.name }}, {{ item.complete }}
-  </li>
-</ul>
+<table>
+  <tr ng-repeat="item in items">
+    <td>{{ item.name }}</td>
+    <td><input ng-model="item.complete" type="checkbox" ng-checked="item.complete" ng-change="updateItem($event, item)"></td>
+  </tr>
+</table>
+
+<h4>Add item to this list</h4>
+<form ng-submit="createItem()">
+  <input ng-model="item.name">
+  <input type="submit">
+</form>

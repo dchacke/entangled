@@ -97,7 +97,7 @@ You can limit this behavior by specifying `:only` or `:except` options. For exam
 
 ```ruby
 entangle only: :create
-entangled only: [:create, :update]
+entangle only: [:create, :update]
 ```
 
 ### Controllers
@@ -134,7 +134,7 @@ class MessagesController < ApplicationController
 
   def destroy
     broadcast do
-      Message.find(params[:id]).destroy
+      @message = Message.find(params[:id]).destroy
     end
   end
 
@@ -148,9 +148,9 @@ end
 Note the following:
 
 - All methods are wrapped in a new `broadcast` block needed to receive and send data to connected clients
-- The `index` method will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
-- The `show`, `create` and `update` methods will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
-- Data sent to clients arrives as stringified JSON
+- The `index` action will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
+- The `show`, `create`, `update`, and `destroy` actions will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
+- The instance variables are sent to clients as stringified JSON
 - Strong parameters are expected
 
 ### Server
@@ -299,6 +299,14 @@ $scope.message.$save(function() {
 
 Note that `$valid()` and `$invalid()` should only be used after $saving a resource, i.e. in the callback of `$save`, since they don't actually invoke server side validations. They only check if a resource contains errors.
 
+#### Persistence
+Just as with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
+
+```javascript
+$scope.message.$persisted();
+// => true or false
+```
+
 #### Associations
 What if you want to only fetch and subscribe to children that belong to a specific parent? Or maybe you want to create a child in your front end and assign it to a specific parent?
 
@@ -361,12 +369,12 @@ end
 ```javascript
 app.factory('Parent', function(Entangled) {
   // Instantiate Entangled service
-  var entangled = new Entangled('ws://localhost:3000/parents');
+  var Parent = new Entangled('ws://localhost:3000/parents');
 
   // Set up association  
-  entangled.hasMany('children');
+  Parent.hasMany('children');
 
-  return entangled;
+  return Parent;
 });
 ```
 
@@ -394,14 +402,6 @@ This is the way to go if you want to fetch records that only belong to a certain
 
 Naturally, all nested records are also synced in real time across all connected clients.
 
-#### Persistence
-Just as with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
-
-```javascript
-$scope.message.$persisted();
-// => true or false
-```
-
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
@@ -411,13 +411,22 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
-- Support for authentication
-- Support for associations
-- On Heroku (maybe in production in general), objects are always in different order depending on their attributes
-- Add $onChange listener to objects
+- Support more than one belongs_to association in back end
+- Support belongs_to in front end
+- Support deeply nested belongs_to, e.g. Parent > Child > Grandchild
+- Support has_one association in back end and front end
+- Add offline capabilities
+- Add authentication - with JWT?
+- On Heroku, tasks are always in different order depending on which ones are checked off and not
+- Add $onChange function to objects - or could a simple $watch and $watchCollection suffice?
 - Add diagram on how it works to Readme
 - Check if Rails 4.0.0 supported too
+- GNU instead of MIT? Or something else? How to switch?
+- Contact Jessy to tweet about it!
+- Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
+- Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
+- Freeze destroyed object
+- Set $persisted() to false on a destroyed object
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem

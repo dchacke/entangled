@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
 
   def destroy
     broadcast do
-      Message.find(params[:id]).destroy
+      @message = Message.find(params[:id]).destroy
     end
   end
 

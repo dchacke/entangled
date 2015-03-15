@@ -21,7 +21,7 @@ class ListsController < ApplicationController
 
   def destroy
     broadcast do
-      List.find(params[:id]).destroy
+      @list = List.find(params[:id]).destroy
     end
   end
 
