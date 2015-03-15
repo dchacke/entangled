@@ -415,7 +415,7 @@ The following features are to be implemented next:
 
 - Support more than one `belongs_to` association in back end
 - Support `belongsTo` in front end
-- Support deeply nested belongs_to, e.g. Parent > Child > Grandchild
+- Support deeply nested `belongs_to`, e.g. `Parent > Child > Grandchild`
 - Support `has_one` association in back end and front end
 - Add offline capabilities
 - Add authentication - with JWT?
