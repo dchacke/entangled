@@ -1,13 +1,6 @@
 require 'spec_helper'
 
 RSpec.describe 'Nested routes', type: :routing do
-  before(:context) do
-    # Create arbitrary controllers here rather than
-    # having a separate file for each in app/controllers
-    class ListsController < ApplicationController; end
-    class ItemsController < ApplicationController; end
-  end
-
   describe 'parent routes' do
     describe '#index' do
       it 'matches the lists_path' do

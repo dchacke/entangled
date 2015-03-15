@@ -6,7 +6,7 @@ Real time is important. Users have come to expect real time behavior from every 
 
 Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
 
-Currently, Entangled runs on Rails 4.2 in the back end and Angular in the front end.
+Currently, Entangled runs on Rails 4.2 and Ruby 2.0 in the back end, and Angular 1.3 in the front end.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -299,6 +299,101 @@ $scope.message.$save(function() {
 
 Note that `$valid()` and `$invalid()` should only be used after $saving a resource, i.e. in the callback of `$save`, since they don't actually invoke server side validations. They only check if a resource contains errors.
 
+#### Associations
+What if you want to only fetch and subscribe to children that belong to a specific parent? Or maybe you want to create a child in your front end and assign it to a specific parent?
+
+Entangled currently supports one `belongs_to` association per model.
+
+For example, imagine the following Parent > Children relationship in your models:
+
+```ruby
+class Parent < ActiveRecord::Base
+  include Entangled::Model
+  entangle
+
+  has_many :children
+end
+
+class Child < ActiveRecord::Base
+  include Entangled::Model
+  entangle
+
+  belongs_to :parent
+end
+```
+
+To reflect this in your front end, you just need to add three things to your app:
+
+- Nest your routes so that they resemble the parent/child relationship:
+
+```ruby
+sockets_for :parents do
+  sockets_for :children
+end
+```
+
+- Adjust the `index` and `create` actions in your `ChildrenController` so that they look like this:
+
+```ruby
+class ChildrenController < ApplicationController
+  include Entangled::Controller
+
+  # Fetch children of specific parent
+  def index
+    broadcast do
+      @children = Parent.find(params[:parent_id]).children
+    end
+  end
+
+  # Create child of specific parent
+  def create
+    broadcast do
+      @child = Parent.find(params[:parent_id]).children.create(child_params)
+    end
+  end
+
+  # show, update and destroy don't need to be nested
+end
+```
+
+- Lastly, inform your Angular parent service about the association:
+
+```javascript
+app.factory('Parent', function(Entangled) {
+  // Instantiate Entangled service
+  var entangled = new Entangled('ws://localhost:3000/parents');
+
+  // Set up association  
+  entangled.hasMany('children');
+
+  return entangled;
+});
+```
+
+This makes a `children()` function available on your parent records on which you can chain all other functions to fetch/manipulate data:
+
+```javascript
+Parent.find(1, function(parent) {
+  parent.children().all(function(children) {
+    // children here all belong to parent with id 1
+  });
+
+  parent.children().find(1, function(child) {
+    // child has id 1 and belongs to parent with id 1
+  });
+
+  parent.children().create({ foo: 'bar' }, function(child) {
+    // child has been persisted and associated with parent
+  });
+
+  // etc
+});
+```
+
+This is the way to go if you want to fetch records that only belong to a certain record, or create records that should belong to a parent record. In short, it is ideal to scope records to parent records.
+
+Naturally, all nested records are also synced in real time across all connected clients.
+
 #### Persistence
 Just as with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
 
@@ -319,7 +414,6 @@ The following features are to be implemented next:
 - Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
 - Support for authentication
 - Support for associations
-- Remove angular dependencies from bower package (they're currently all being downloaded as well when doing bower install)
 - On Heroku (maybe in production in general), objects are always in different order depending on their attributes
 - Add $onChange listener to objects
 - Add diagram on how it works to Readme
