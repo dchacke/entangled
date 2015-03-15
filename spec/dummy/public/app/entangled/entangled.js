@@ -174,7 +174,6 @@ angular.module('entangled', [])
   // sets up websockets accordingly
   Entangled.prototype.hasMany = function(resources) {
     this.hasMany = resources;
-    // this[resources] = new Entangled(this.webSocketUrl + '/' + this.id + '/' + resources);
   };
 
   // Function to instantiate a new Resource, optionally
