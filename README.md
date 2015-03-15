@@ -413,7 +413,10 @@ The following features are to be implemented next:
 
 - Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
 - Support for authentication
-- Support for associations
+- Support more than one belongs_to association in back end
+- Support belongs_to in front end
+- Support deeply nested belongs_to, e.g. Parent > Child > Grandchild
+- Support has_one association in back end and front end
 - On Heroku (maybe in production in general), objects are always in different order depending on their attributes
 - Add $onChange listener to objects
 - Add diagram on how it works to Readme
