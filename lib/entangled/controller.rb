@@ -209,7 +209,7 @@ module Entangled
 
           # For every other controller action, simply wrap whatever is
           # yielded in the tubesock block to execute it in the context
-          # of the socket. Other custom action can be added through this
+          # of the socket. Other custom actions can be added through this
           else
             tubesock.onmessage do |m|
               yield
