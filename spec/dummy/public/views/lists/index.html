@@ -1,0 +1,14 @@
+<h1>Lists</h1>
+
+<table>
+  <tr ng-repeat="list in lists">
+    <td><a ng-href="#/lists/{{ list.id }}">{{ list.name }}</a></td>
+    <td><button ng-click="destroy(list)">Delete</button></td>
+  </li>
+</table>
+
+<form ng-submit="create()">
+  <input type="text" ng-model="list.name">
+  <input type="submit">
+</form>
+

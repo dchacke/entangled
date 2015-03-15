@@ -5,18 +5,24 @@ RSpec.describe Message, type: :model do
     it { is_expected.to respond_to :body }
   end
 
+  describe 'Database' do
+    it { is_expected.to have_db_column :body }
+  end
+
   describe 'Methods' do
-    describe '.channel' do
+    describe '#collection_channel' do
+      let(:message) { Message.create(body: 'foo') }
+
       it 'is the underscore, pluralized model name' do
-        expect(Message.channel).to eq 'messages'
+        expect(message.collection_channel).to eq '/messages'
       end
     end
 
-    describe '#channel' do
+    describe '#member_channel' do
       let(:message) { Message.create(body: 'foo') }
-
-      it "is the class's channel name plus the member as param" do
-        expect(message.channel).to eq "messages/#{message.to_param}"
+      
+      it "is the collection channel plus the member as param" do
+        expect(message.member_channel).to eq "/messages/#{message.to_param}"
       end
     end
 
@@ -35,7 +41,7 @@ RSpec.describe Message, type: :model do
           redis = stub_redis
 
           expect(redis).to have_received(:publish).with(
-            Message.channel, {
+            message.collection_channel, {
               action: :create,
               resource: message
             }.to_json
@@ -46,7 +52,7 @@ RSpec.describe Message, type: :model do
           redis = stub_redis
 
           expect(redis).to have_received(:publish).with(
-            message.channel, {
+            message.member_channel, {
               action: :create,
               resource: message
             }.to_json
@@ -63,7 +69,7 @@ RSpec.describe Message, type: :model do
           message.update(body: 'bar')
 
           expect(redis).to have_received(:publish).with(
-            Message.channel, {
+            message.collection_channel, {
               action: :update,
               resource: message
             }.to_json
@@ -76,7 +82,7 @@ RSpec.describe Message, type: :model do
           message.update(body: 'bar')
 
           expect(redis).to have_received(:publish).with(
-            message.channel, {
+            message.member_channel, {
               action: :update,
               resource: message
             }.to_json
@@ -93,7 +99,7 @@ RSpec.describe Message, type: :model do
           message.destroy
 
           expect(redis).to have_received(:publish).with(
-            Message.channel, {
+            message.collection_channel, {
               action: :destroy,
               resource: message
             }.to_json
@@ -106,7 +112,7 @@ RSpec.describe Message, type: :model do
           message.destroy
 
           expect(redis).to have_received(:publish).with(
-            message.channel, {
+            message.member_channel, {
               action: :destroy,
               resource: message
             }.to_json
@@ -124,9 +130,6 @@ RSpec.describe Message, type: :model do
   end
 
   describe 'Validations' do
-    it 'validates presence of the body' do
-      message = Message.create
-      expect(message.errors[:body]).to include "can't be blank"
-    end
+    it { is_expected.to validate_presence_of :body }
   end
 end

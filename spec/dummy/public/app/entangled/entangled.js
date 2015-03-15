@@ -9,7 +9,7 @@ angular.module('entangled', [])
   // methods $save() and $destroy. A Resource also
   // stores the socket's URL it was retrieved from so it
   // can be reused for other requests.
-  var Resource = function(params, webSocketUrl) {
+  var Resource = function(params, webSocketUrl, hasMany) {
     // Assign proerties
     for (var key in params) {
       // Skip inherent object properties
@@ -18,7 +18,15 @@ angular.module('entangled', [])
       }
     }
 
+    // Assign socket URL
     this.webSocketUrl = webSocketUrl;
+
+    // Assign has many relationship
+    if (hasMany) {
+      this[hasMany] = function() {
+        return new Entangled(this.webSocketUrl + '/' + this.id + '/' + hasMany);
+      };
+    }
   };
 
   // $save() will send a request to the server
@@ -26,14 +34,12 @@ angular.module('entangled', [])
   // an existing, depending on whether or not
   // an id is present.
   Resource.prototype.$save = function(callback) {
-    var that = this;
-
     if (this.id) {
       // Update
-      var socket = new WebSocket(that.webSocketUrl + '/' + that.id + '/update');
+      var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/update');
       socket.onopen = function() {
-        socket.send(JSON.stringify(that));
-      };
+        socket.send(JSON.stringify(this));
+      }.bind(this);
 
       // Receive updated resource from server
       socket.onmessage = function(event) {
@@ -43,25 +49,29 @@ angular.module('entangled', [])
           // Assign/override new data (such as updated_at, etc)
           if (data.resource) {
             for (key in data.resource) {
-              that[key] = data.resource[key];
+              this[key] = data.resource[key];
             }
           }
         }
 
-        // Pass 'that' to callback for create
-        // function so that the create function
+        // Assign has many association. The association
+        // can only be available to a persisted record
+        this[this.hasMany] = new Entangled(this.webSocketUrl + '/' + this.id + '/' + this.hasMany);
+
+        // Pass 'this' to callback for create
+        // function so this the create function
         // can pass the created resource to its
         // own callback; not needed for $save per se
-        if (callback) callback(that);
-      };
+        if (callback) callback(this);
+      }.bind(this);
     } else {
       // Create
-      var socket = new WebSocket(that.webSocketUrl + '/create');
+      var socket = new WebSocket(this.webSocketUrl + '/create');
 
       // Send attributes to server
       socket.onopen = function() {
-        socket.send(JSON.stringify(that));
-      };
+        socket.send(JSON.stringify(this));
+      }.bind(this);
 
       // Receive saved resource from server
       socket.onmessage = function(event) {
@@ -72,17 +82,17 @@ angular.module('entangled', [])
           // updated_at, etc)
           if (data.resource) {
             for (key in data.resource) {
-              that[key] = data.resource[key];
+              this[key] = data.resource[key];
             }
           }
         }
 
-        // Pass 'that' to callback for create
-        // function so that the create function
+        // Pass 'this' to callback for create
+        // function so this the create function
         // can pass the created resource to its
         // own callback; not needed for $save per se
-        if (callback) callback(that);
-      };
+        if (callback) callback(this);
+      }.bind(this);
     }
   };
 
@@ -136,11 +146,11 @@ angular.module('entangled', [])
 
   // Resources wraps all individual Resource objects
   // in a collection.
-  var Resources = function(resources, webSocketUrl) {
+  var Resources = function(resources, webSocketUrl, hasMany) {
     this.all = [];
 
     for (var i = 0; i < resources.length; i++) {
-      var resource = new Resource(resources[i], webSocketUrl);
+      var resource = new Resource(resources[i], webSocketUrl, hasMany);
       this.all.push(resource);
     }
   };
@@ -160,10 +170,17 @@ angular.module('entangled', [])
     this.webSocketUrl = webSocketUrl;
   };
 
+  // hasMany() adds the appropriate association and
+  // sets up websockets accordingly
+  Entangled.prototype.hasMany = function(resources) {
+    this.hasMany = resources;
+    // this[resources] = new Entangled(this.webSocketUrl + '/' + this.id + '/' + resources);
+  };
+
   // Function to instantiate a new Resource, optionally
   // with given parameters
   Entangled.prototype.new = function(params) {
-    return new Resource(params, this.webSocketUrl);
+    return new Resource(params, this.webSocketUrl, this.hasMany);
   };
 
   // Retrieve all Resources from the root of the socket's
@@ -180,12 +197,12 @@ angular.module('entangled', [])
         // If the collection of Resources was sent
         if (data.resources) {
           // Store retrieved Resources in property
-          this.resources = new Resources(data.resources, socket.url);
+          this.resources = new Resources(data.resources, socket.url, this.hasMany);
         } else if (data.action) {
           if (data.action === 'create') {
             // If new Resource was created, add it to the
             // collection
-            this.resources.all.push(new Resource(data.resource, socket.url));
+            this.resources.all.push(new Resource(data.resource, socket.url, this.hasMany));
           } else if (data.action === 'update') {
             // If an existing Resource was updated,
             // update it in the collection as well
@@ -197,7 +214,7 @@ angular.module('entangled', [])
               }
             }
 
-            this.resources.all[index] = new Resource(data.resource, socket.url);
+            this.resources.all[index] = new Resource(data.resource, socket.url, this.hasMany);
           } else if (data.action === 'destroy') {
             // If a Resource was destroyed, remove it
             // from Resources as well
@@ -220,7 +237,7 @@ angular.module('entangled', [])
       // Run the callback and pass in the
       // resulting collection
       callback(this.resources.all);
-    };
+    }.bind(this);
   };
 
   // Instantiate and persist a record in one go
@@ -243,12 +260,12 @@ angular.module('entangled', [])
         if (data.resource && !data.action) {
           // If the Resource was sent from the server,
           // store it
-          this.resource = new Resource(data.resource, webSocketUrl);
+          this.resource = new Resource(data.resource, webSocketUrl, this.hasMany);
         } else if (data.action) {
           if (data.action === 'update') {
             // If the stored Resource was updated,
             // update it here as well
-            this.resource = new Resource(data.resource, webSocketUrl);
+            this.resource = new Resource(data.resource, webSocketUrl, this.hasMany);
           } else if (data.action === 'destroy') {
             // If the stored Resource was destroyed,
             // remove it from here as well
@@ -262,7 +279,7 @@ angular.module('entangled', [])
 
       // Run callback with retrieved Resource
       callback(this.resource);
-    };
+    }.bind(this);
   };
 
   return Entangled;
