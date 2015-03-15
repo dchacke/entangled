@@ -11,6 +11,21 @@ angular.module('entangledTest')
           $scope.items = items;
         });
       });
+
+      $scope.item = $scope.list.items().new();
+      console.log($scope.item);
     });
   });
+
+  $scope.createItem = function() {
+    $scope.item.$save(function() {
+      $scope.$apply(function() {
+        $scope.item = $scope.list.items().new();
+      });
+    });
+  };
+
+  $scope.updateItem = function(event, item) {
+    item.$save();
+  };
 });

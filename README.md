@@ -411,16 +411,21 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Offline capabilities - when client is disconnected, put websocket interactions in a queue and dequeue all once connected again
-- Support for authentication
+- Assign instance variable in delete action and adjust js part and readme accordingly
 - Support more than one belongs_to association in back end
 - Support belongs_to in front end
 - Support deeply nested belongs_to, e.g. Parent > Child > Grandchild
 - Support has_one association in back end and front end
-- On Heroku (maybe in production in general), objects are always in different order depending on their attributes
-- Add $onChange listener to objects
+- Add offline capabilities
+- Add authentication - with JWT?
+- On Heroku, tasks are always in different order depending on which ones are checked off and not
+- Add $onChange function to objects - or could a simple $watch and $watchCollection suffice?
 - Add diagram on how it works to Readme
 - Check if Rails 4.0.0 supported too
+- GNU instead of MIT? Or something else? How to switch?
+- Contact Jessy to tweet about it!
+- Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
+- Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
