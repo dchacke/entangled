@@ -161,7 +161,7 @@ describe('MessagesCtrl', function () {
     expect(message.$valid()).toBeTruthy();
   });
 
-  it('checks for validity with $invalid()', function() {
+  it('checks for invalidity with $invalid()', function() {
     var message = Message.new();
 
     // Message should not be invalid without errors
@@ -199,6 +199,17 @@ describe('MessagesCtrl', function () {
       });
       done();
     }, 100);
+  });
+
+  it('can destroy a message and receives it in the callback', function(done) {
+    Message.create({ body: 'foo' }, function(message) {
+      expect(message.$persisted()).toBeTruthy();
+
+      message.$destroy(function(message) {
+        expect(message).toBeDefined();
+        done();
+      });
+    });
   });
 
   it('can check for persistence', function() {

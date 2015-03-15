@@ -193,10 +193,23 @@ module Entangled
               close_db_connection
             end
 
+          when 'destroy'
+            tubesock.onmessage do |m|
+              yield
+
+              # Send resource that was just destroyed back to client
+              if member
+                tubesock.send_data({
+                  resource: member
+                }.to_json)
+              end
+
+              close_db_connection
+            end
+
           # For every other controller action, simply wrap whatever is
           # yielded in the tubesock block to execute it in the context
-          # of the socket. The delete action is automatically covered
-          # by this, and other custom action can be added through this.
+          # of the socket. Other custom action can be added through this
           else
             tubesock.onmessage do |m|
               yield

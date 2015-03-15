@@ -134,7 +134,7 @@ class MessagesController < ApplicationController
 
   def destroy
     broadcast do
-      Message.find(params[:id]).destroy
+      @message = Message.find(params[:id]).destroy
     end
   end
 
@@ -148,9 +148,9 @@ end
 Note the following:
 
 - All methods are wrapped in a new `broadcast` block needed to receive and send data to connected clients
-- The `index` method will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
-- The `show`, `create` and `update` methods will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
-- Data sent to clients arrives as stringified JSON
+- The `index` action will expect an instance variable with the same name as your controller in the plural form (e.g. `@messages` in a `MessagesController`)
+- The `show`, `create`, `update`, and `destroy` actions will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
+- The instance variables are sent to clients as stringified JSON
 - Strong parameters are expected
 
 ### Server
@@ -411,7 +411,6 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Assign instance variable in delete action and adjust js part and readme accordingly
 - Support more than one belongs_to association in back end
 - Support belongs_to in front end
 - Support deeply nested belongs_to, e.g. Parent > Child > Grandchild
@@ -426,6 +425,8 @@ The following features are to be implemented next:
 - Contact Jessy to tweet about it!
 - Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
+- Freeze destroyed object
+- Set $persisted() to false on a destroyed object
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem

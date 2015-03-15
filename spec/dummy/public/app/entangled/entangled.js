@@ -6,7 +6,7 @@ angular.module('entangled', [])
   // Every response coming from the server will be wrapped
   // in a Resource constructor to represent a CRUD-able
   // resource that can be saved and destroyed using the
-  // methods $save() and $destroy. A Resource also
+  // methods $save(), $destroy, and others. A Resource also
   // stores the socket's URL it was retrieved from so it
   // can be reused for other requests.
   var Resource = function(params, webSocketUrl, hasMany) {
@@ -114,14 +114,28 @@ angular.module('entangled', [])
   // destroy an existing record.
   Resource.prototype.$destroy = function(callback) {
     var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/destroy');
+
     socket.onopen = function() {
       // It's fine to send an empty message since the
       // socket's URL contains all the information
       // needed to destroy the record (the id).
       socket.send(null);
-
-      if (callback) callback();
     };
+
+    socket.onmessage = function(event) {
+      if (event.data) {
+        var data = JSON.parse(event.data);
+
+        // Assign/override new data
+        if (data.resource) {
+          for (key in data.resource) {
+            this[key] = data.resource[key];
+          }
+        }
+      }
+
+      if (callback) callback(this);
+    }.bind(this);
   };
 
   // $valid() checks if any errors are attached to the object
