@@ -97,7 +97,7 @@ You can limit this behavior by specifying `:only` or `:except` options. For exam
 
 ```ruby
 entangle only: :create
-entangled only: [:create, :update]
+entangle only: [:create, :update]
 ```
 
 ### Controllers
@@ -299,6 +299,14 @@ $scope.message.$save(function() {
 
 Note that `$valid()` and `$invalid()` should only be used after $saving a resource, i.e. in the callback of `$save`, since they don't actually invoke server side validations. They only check if a resource contains errors.
 
+#### Persistence
+Just as with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
+
+```javascript
+$scope.message.$persisted();
+// => true or false
+```
+
 #### Associations
 What if you want to only fetch and subscribe to children that belong to a specific parent? Or maybe you want to create a child in your front end and assign it to a specific parent?
 
@@ -361,12 +369,12 @@ end
 ```javascript
 app.factory('Parent', function(Entangled) {
   // Instantiate Entangled service
-  var entangled = new Entangled('ws://localhost:3000/parents');
+  var Parent = new Entangled('ws://localhost:3000/parents');
 
   // Set up association  
-  entangled.hasMany('children');
+  Parent.hasMany('children');
 
-  return entangled;
+  return Parent;
 });
 ```
 
@@ -393,14 +401,6 @@ Parent.find(1, function(parent) {
 This is the way to go if you want to fetch records that only belong to a certain record, or create records that should belong to a parent record. In short, it is ideal to scope records to parent records.
 
 Naturally, all nested records are also synced in real time across all connected clients.
-
-#### Persistence
-Just as with ActiveRecord's `persisted?` method, you can use `$persisted()` on an object to check if it was successfully stored in the database.
-
-```javascript
-$scope.message.$persisted();
-// => true or false
-```
 
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
