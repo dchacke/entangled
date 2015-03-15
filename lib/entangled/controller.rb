@@ -42,15 +42,9 @@ module Entangled
         instance_variable_get(:"@#{resource_name}")
       end
 
-      # Channel name for single resource, used in show action
-      def member_channel
-        member.member_channel
-      end
-
-      # Channel name for collection of resources, used in index
-      # action
-      def collection_channel
-        collection.name.constantize.new.collection_channel
+      # Infer channel from current path
+      def channel
+        request.path
       end
 
       # Close the connection to the DB so as to
@@ -94,7 +88,7 @@ module Entangled
             # has to be "@tacos"
             if collection
               redis_thread = Thread.new do
-                redis.subscribe collection_channel do |on|
+                redis.subscribe channel do |on|
                   # Broadcast messages to all connected clients
                   on.message do |channel, message|
                     tubesock.send_data message
@@ -135,7 +129,7 @@ module Entangled
             # The variable name, in this example, has to be "@taco"
             if member
               redis_thread = Thread.new do
-                redis.subscribe member_channel do |on|
+                redis.subscribe channel do |on|
                   # Broadcast messages to all connected clients
                   on.message do |channel, message|
                     tubesock.send_data message

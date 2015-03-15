@@ -23,13 +23,13 @@ RSpec.describe Item, type: :model do
 
     describe '#member_channel' do
       it 'has a nested member channel' do
-        expect(item.member_channel).to eq "lists/#{list.to_param}/items/#{item.to_param}"
+        expect(item.member_channel).to eq "/lists/#{list.to_param}/items/#{item.to_param}"
       end
     end
 
     describe '#collection_channel' do
       it 'has a nested collection channel' do
-        expect(item.collection_channel).to eq "lists/#{list.to_param}/items"
+        expect(item.collection_channel).to eq "/lists/#{list.to_param}/items"
       end
     end
   end

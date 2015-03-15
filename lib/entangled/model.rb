@@ -78,7 +78,11 @@ module Entangled
       # id. For example, if it's a DeliciousTaco with the id 1,
       # the member channel for the single record is "delicious_tacos/1".
       # Nesting is automatically applied through the use of
-      # the collection channel
+      # the collection channel.
+      # 
+      # The member channel has to be the same as the path to
+      # the resource's show action, including a leading
+      # forward slash
       def member_channel
         "#{collection_channel}/#{self.to_param}"
       end
@@ -89,18 +93,20 @@ module Entangled
       # 
       # If the model belongs to another model, the channel is nested
       # accordingly. For example, if a child belongs to a parent,
-      # the child's collection channel is "parents/1/children"
+      # the child's collection channel is "parents/1/children".
+      # 
+      # The collection channel has to be the same as the path to
+      # the resource's index action, including a leading forward slash
       def collection_channel
         belongs_to_assocations = self.class.reflect_on_all_associations(:belongs_to)
         own_channel = self.class.name.underscore.pluralize
 
         if belongs_to_assocations.any?
           parent = send(belongs_to_assocations.first.name)
-
           "#{parent.member_channel}/#{own_channel}"
         else
-          own_channel
-        end        
+          "/#{own_channel}"
+        end
       end
 
       private

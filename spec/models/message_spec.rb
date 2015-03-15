@@ -14,7 +14,7 @@ RSpec.describe Message, type: :model do
       let(:message) { Message.create(body: 'foo') }
 
       it 'is the underscore, pluralized model name' do
-        expect(message.collection_channel).to eq 'messages'
+        expect(message.collection_channel).to eq '/messages'
       end
     end
 
@@ -22,7 +22,7 @@ RSpec.describe Message, type: :model do
       let(:message) { Message.create(body: 'foo') }
       
       it "is the collection channel plus the member as param" do
-        expect(message.member_channel).to eq "messages/#{message.to_param}"
+        expect(message.member_channel).to eq "/messages/#{message.to_param}"
       end
     end
 

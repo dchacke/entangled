@@ -18,13 +18,13 @@ RSpec.describe List, type: :model do
 
     describe '#channel' do
       it 'has the right channel' do
-        expect(list.member_channel).to eq "lists/#{list.to_param}"
+        expect(list.member_channel).to eq "/lists/#{list.to_param}"
       end
     end
 
     describe '#collection_channel' do
       it 'has the right channel' do
-        expect(list.collection_channel).to eq 'lists'
+        expect(list.collection_channel).to eq '/lists'
       end
     end
   end
