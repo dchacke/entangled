@@ -9,7 +9,7 @@ RSpec.describe Item, type: :model do
 
   describe 'Database' do
     it { is_expected.to have_db_column :name }
-    it { is_expected.to have_db_column(:complete).of_type(:boolean).with_options(default: 'f') }
+    it { is_expected.to have_db_column(:complete).of_type(:boolean) }
     it { is_expected.to have_db_column(:list_id).of_type(:integer) }
   end
 
