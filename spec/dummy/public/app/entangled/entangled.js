@@ -87,11 +87,6 @@ angular.module('entangled', [])
           }
         }
 
-        // Assign has many association. The association
-        // can only be available to a persisted record
-        // console.log(this);
-        // this[this.hasMany] = new Entangled(this.webSocketUrl + '/' + this.id + '/' + this.hasMany);
-
         // Pass 'this' to callback for create
         // function so this the create function
         // can pass the created resource to its
