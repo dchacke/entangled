@@ -3,7 +3,7 @@
 angular.module('entangledTest')
 
 .factory('List', function(Entangled) {
-  var entangled = new Entangled('ws://localhost:3000/lists');
-  entangled.hasMany('items');
-  return entangled;
+  var List = new Entangled('ws://localhost:3000/lists');
+  List.hasMany('items');
+  return List;
 });

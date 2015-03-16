@@ -19,6 +19,13 @@ class ListsController < ApplicationController
     end
   end
 
+  def update
+    broadcast do
+      @list = List.find(params[:id])
+      @list.update(list_params)
+    end
+  end
+
   def destroy
     broadcast do
       @list = List.find(params[:id]).destroy
