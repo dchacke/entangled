@@ -179,6 +179,8 @@ angular.module('entangled', [])
   // of the index action on the server where the
   // Resources can be retrieved.
   var Entangled = function(webSocketUrl) {
+    this.className = 'Entangled';
+
     // Store the root URL that sockets
     // will connect to
     this.webSocketUrl = webSocketUrl;

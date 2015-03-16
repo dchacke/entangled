@@ -413,7 +413,6 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Make front end tests less dependent on Angular controllers; instead, test services directly
 - Support more than one `belongs_to` association in back end
 - Support `belongsTo` in front end
 - Support deeply nested `belongs_to`, e.g. `Parent > Child > Grandchild`
