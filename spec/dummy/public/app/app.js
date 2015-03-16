@@ -7,14 +7,6 @@ angular.module('entangledTest', [
 
 .config(function($routeProvider) {
   $routeProvider
-    .when('/', {
-      templateUrl: 'views/messages/index.html',
-      controller: 'MessagesCtrl'
-    })
-    .when('/messages/:id', {
-      templateUrl: 'views/messages/show.html',
-      controller: 'MessageCtrl'
-    })
     .when('/lists', {
       templateUrl: 'views/lists/index.html',
       controller: 'ListsCtrl'
@@ -24,6 +16,6 @@ angular.module('entangledTest', [
       controller: 'ListCtrl'
     })
     .otherwise({
-      redirectTo: '/'
+      redirectTo: '/lists'
     });
 })
