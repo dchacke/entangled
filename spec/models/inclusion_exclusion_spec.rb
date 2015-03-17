@@ -14,21 +14,15 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
     it 'publishes creation' do
       redis = stub_redis
 
-      # Publishing to collection channel
-      expect(redis).to have_received(:publish).with(
-        foo.collection_channel, {
-          action: :create,
-          resource: foo
-        }.to_json
-      )
-
-      # Publishing to member channel
-      expect(redis).to have_received(:publish).with(
-        foo.member_channel, {
-          action: :create,
-          resource: foo
-        }.to_json
-      )
+      # Publishing to channels
+      foo.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :create,
+            resource: foo
+          }.to_json
+        )
+      end
     end
 
     it 'does not publish update' do
@@ -36,19 +30,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       foo.update(body: 'bar')
 
-      expect(redis).to have_received(:publish).with(
-        'foos', {
-          action: :update,
-          resource: foo
-        }.to_json
-      ).never
-
-      expect(redis).to have_received(:publish).with(
-        foo.member_channel, {
-          action: :update,
-          resource: foo
-        }.to_json
-      ).never
+      foo.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :update,
+            resource: foo
+          }.to_json
+        ).never
+      end
     end
 
     it 'does not publish destruction' do
@@ -56,19 +45,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       foo.destroy
 
-      expect(redis).to have_received(:publish).with(
-        'foos', {
-          action: :destroy,
-          resource: foo
-        }.to_json
-      ).never
-
-      expect(redis).to have_received(:publish).with(
-        foo.member_channel, {
-          action: :destroy,
-          resource: foo
-        }.to_json
-      ).never
+      foo.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :destroy,
+            resource: foo
+          }.to_json
+        ).never
+      end
     end
   end
 
@@ -79,20 +63,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
       redis = stub_redis
 
       # Publishing to collection channel
-      expect(redis).to have_received(:publish).with(
-        bar.collection_channel, {
-          action: :create,
-          resource: bar
-        }.to_json
-      )
-
-      # Publishing to member channel
-      expect(redis).to have_received(:publish).with(
-        bar.member_channel, {
-          action: :create,
-          resource: bar
-        }.to_json
-      )
+      bar.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :create,
+            resource: bar
+          }.to_json
+        )
+      end
     end
 
     it 'publishes the update' do
@@ -100,19 +78,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       bar.update(body: 'bar')
 
-      expect(redis).to have_received(:publish).with(
-        bar.collection_channel, {
-          action: :update,
-          resource: bar
-        }.to_json
-      )
-
-      expect(redis).to have_received(:publish).with(
-        bar.member_channel, {
-          action: :update,
-          resource: bar
-        }.to_json
-      )
+      bar.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :update,
+            resource: bar
+          }.to_json
+        )
+      end
     end
 
     it 'does not publish destruction' do
@@ -120,19 +93,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       bar.destroy
 
-      expect(redis).to have_received(:publish).with(
-        bar.collection_channel, {
-          action: :destroy,
-          resource: bar
-        }.to_json
-      ).never
-
-      expect(redis).to have_received(:publish).with(
-        bar.member_channel, {
-          action: :destroy,
-          resource: bar
-        }.to_json
-      ).never
+      bar.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :destroy,
+            resource: bar
+          }.to_json
+        ).never
+      end
     end
   end
 
@@ -142,21 +110,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
     it 'does not publish the creation' do
       redis = stub_redis
 
-      # Publishing to collection channel
-      expect(redis).to have_received(:publish).with(
-        foobar.collection_channel, {
-          action: :create,
-          resource: foobar
-        }.to_json
-      ).never
-
-      # Publishing to member channel
-      expect(redis).to have_received(:publish).with(
-        foobar.member_channel, {
-          action: :create,
-          resource: foobar
-        }.to_json
-      ).never
+      foobar.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :create,
+            resource: foobar
+          }.to_json
+        ).never
+      end
     end
 
     it 'publishes the update' do
@@ -164,19 +125,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       foobar.update(body: 'foobar')
 
-      expect(redis).to have_received(:publish).with(
-        foobar.collection_channel, {
-          action: :update,
-          resource: foobar
-        }.to_json
-      )
-
-      expect(redis).to have_received(:publish).with(
-        foobar.member_channel, {
-          action: :update,
-          resource: foobar
-        }.to_json
-      )
+      foobar.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :update,
+            resource: foobar
+          }.to_json
+        )
+      end
     end
 
     it 'publishes the destruction' do
@@ -184,19 +140,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       foobar.destroy
 
-      expect(redis).to have_received(:publish).with(
-        foobar.collection_channel, {
-          action: :destroy,
-          resource: foobar
-        }.to_json
-      )
-
-      expect(redis).to have_received(:publish).with(
-        foobar.member_channel, {
-          action: :destroy,
-          resource: foobar
-        }.to_json
-      )
+      foobar.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :destroy,
+            resource: foobar
+          }.to_json
+        )
+      end
     end
   end
 
@@ -206,21 +157,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
     it 'publishes the creation' do
       redis = stub_redis
 
-      # Publishing to collection channel
-      expect(redis).to have_received(:publish).with(
-        barfoo.collection_channel, {
-          action: :create,
-          resource: barfoo
-        }.to_json
-      )
-
-      # Publishing to member channel
-      expect(redis).to have_received(:publish).with(
-        barfoo.member_channel, {
-          action: :create,
-          resource: barfoo
-        }.to_json
-      )
+      barfoo.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :create,
+            resource: barfoo
+          }.to_json
+        )
+      end
     end
 
     it 'dpes not publish the update' do
@@ -228,19 +172,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       barfoo.update(body: 'barfoo')
 
-      expect(redis).to have_received(:publish).with(
-        barfoo.collection_channel, {
-          action: :update,
-          resource: barfoo
-        }.to_json
-      ).never
-
-      expect(redis).to have_received(:publish).with(
-        barfoo.member_channel, {
-          action: :update,
-          resource: barfoo
-        }.to_json
-      ).never
+      barfoo.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :update,
+            resource: barfoo
+          }.to_json
+        ).never
+      end
     end
 
     it 'does not publish the destruction' do
@@ -248,19 +187,14 @@ RSpec.describe 'Inclusion/exclusion', type: :model do
 
       barfoo.destroy
 
-      expect(redis).to have_received(:publish).with(
-        barfoo.collection_channel, {
-          action: :destroy,
-          resource: barfoo
-        }.to_json
-      ).never
-
-      expect(redis).to have_received(:publish).with(
-        barfoo.member_channel, {
-          action: :destroy,
-          resource: barfoo
-        }.to_json
-      ).never
+      barfoo.channels.each do |channel|
+        expect(redis).to have_received(:publish).with(
+          channel, {
+            action: :destroy,
+            resource: barfoo
+          }.to_json
+        ).never
+      end
     end
   end
 end

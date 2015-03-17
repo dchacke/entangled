@@ -16,15 +16,17 @@ RSpec.describe List, type: :model do
   describe 'Methods' do
     let(:list) { List.create(name: 'foo') }
 
-    describe '#member_channel' do
-      it 'has the right channel' do
-        expect(list.member_channel).to eq "/lists/#{list.to_param}"
+    describe '#channels' do
+      it 'is an array of channels' do
+        expect(list.channels).to be_an Array
       end
-    end
 
-    describe '#collection_channel' do
-      it 'has the right channel' do
-        expect(list.collection_channel).to eq '/lists'
+      it "includes the collection's channel" do
+        expect(list.channels).to include '/lists'
+      end
+
+      it "includes the member's channel" do
+        expect(list.channels).to include "/lists/#{list.to_param}"
       end
     end
   end
@@ -43,23 +45,27 @@ RSpec.describe List, type: :model do
       it 'broadcasts the creation to the collection channel' do
         redis = stub_redis
 
-        expect(redis).to have_received(:publish).with(
-          list.collection_channel, {
-            action: :create,
-            resource: list
-          }.to_json
-        )
+        list.channels.each do |channel|
+          expect(redis).to have_received(:publish).with(
+            channel, {
+              action: :create,
+              resource: list
+            }.to_json
+          )
+        end
       end
 
       it 'broadcasts the creation to the member channel' do
         redis = stub_redis
 
-        expect(redis).to have_received(:publish).with(
-          list.member_channel, {
-            action: :create,
-            resource: list
-          }.to_json
-        )
+        list.channels.each do |channel|
+          expect(redis).to have_received(:publish).with(
+            channel, {
+              action: :create,
+              resource: list
+            }.to_json
+          )
+        end
       end
     end
 
@@ -71,12 +77,14 @@ RSpec.describe List, type: :model do
 
         list.update(name: 'bar')
 
-        expect(redis).to have_received(:publish).with(
-          list.collection_channel, {
-            action: :update,
-            resource: list
-          }.to_json
-        )
+        list.channels.each do |channel|
+          expect(redis).to have_received(:publish).with(
+            channel, {
+              action: :update,
+              resource: list
+            }.to_json
+          )
+        end
       end
 
       it 'broadcasts the update to the member channel' do
@@ -84,12 +92,14 @@ RSpec.describe List, type: :model do
 
         list.update(name: 'bar')
 
-        expect(redis).to have_received(:publish).with(
-          list.member_channel, {
-            action: :update,
-            resource: list
-          }.to_json
-        )
+        list.channels.each do |channel|
+          expect(redis).to have_received(:publish).with(
+            channel, {
+              action: :update,
+              resource: list
+            }.to_json
+          )
+        end
       end
     end
 
@@ -101,12 +111,14 @@ RSpec.describe List, type: :model do
 
         list.destroy
 
-        expect(redis).to have_received(:publish).with(
-          list.collection_channel, {
-            action: :destroy,
-            resource: list
-          }.to_json
-        )
+        list.channels.each do |channel|
+          expect(redis).to have_received(:publish).with(
+            channel, {
+              action: :destroy,
+              resource: list
+            }.to_json
+          )
+        end
       end
 
       it 'broadcasts the destruction to the member channel' do
@@ -114,12 +126,14 @@ RSpec.describe List, type: :model do
         
         list.destroy
 
-        expect(redis).to have_received(:publish).with(
-          list.member_channel, {
-            action: :destroy,
-            resource: list
-          }.to_json
-        )
+        list.channels.each do |channel|
+          expect(redis).to have_received(:publish).with(
+            channel, {
+              action: :destroy,
+              resource: list
+            }.to_json
+          )
+        end
       end
     end
   end

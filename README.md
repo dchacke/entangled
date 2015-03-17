@@ -413,7 +413,8 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Support more than one `belongs_to` association in back end
+- Check if routes really allow options right now. For example, what if I pass in shallow: true? Run rake routes to check!
+- Allow for more than one level of nesting of `#channels` in `Entangled::Model`
 - Support `belongsTo` in front end
 - Support deeply nested `belongs_to`, e.g. `Parent > Child > Grandchild`
 - Support `has_one` association in back end and front end
@@ -430,6 +431,7 @@ The following features are to be implemented next:
 - Freeze destroyed object
 - Set `$persisted()` to false on a destroyed object
 - Add `.destroyAll()` function to `Resources`
+- Add support for plain JavaScript usage (without Angular) and add section about that to Readme
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem

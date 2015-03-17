@@ -21,15 +21,25 @@ RSpec.describe Item, type: :model do
     let(:list) { List.create(name: 'foo') }
     let(:item) { list.items.create(name: 'bar') }
 
-    describe '#member_channel' do
-      it 'has a nested member channel' do
-        expect(item.member_channel).to eq "/lists/#{list.to_param}/items/#{item.to_param}"
+    describe '#channels' do
+      it 'is an array of channels' do
+        expect(item.channels).to be_an Array
       end
-    end
 
-    describe '#collection_channel' do
-      it 'has a nested collection channel' do
-        expect(item.collection_channel).to eq "/lists/#{list.to_param}/items"
+      it "includes the collection's channel" do
+        expect(item.channels).to include '/items'
+      end
+
+      it "includes the item's direct channel" do
+        expect(item.channels).to include "/items/#{item.to_param}"
+      end
+
+      it "includes the collection's nested channel" do
+        expect(item.channels).to include "/lists/#{list.to_param}/items"
+      end
+
+      it "includes the item's nested channel" do
+        expect(item.channels).to include "/lists/#{list.to_param}/items/#{item.to_param}"
       end
     end
   end
