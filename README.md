@@ -430,6 +430,7 @@ The following features are to be implemented next:
 - Freeze destroyed object
 - Set `$persisted()` to false on a destroyed object
 - Add `.destroyAll()` function to `Resources`
+- Add support for plain JavaScript usage (without Angular) and add section about that to Readme
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
