@@ -73,59 +73,54 @@ module Entangled
         attributes.merge(errors: errors).as_json
       end
 
-      # The channel name for a single record containing the
-      # inferred channel name from the class and the record's
-      # id. For example, if it's a DeliciousTaco with the id 1,
-      # the member channel for the single record is "delicious_tacos/1".
-      # Nesting is automatically applied through the use of
-      # the collection channel.
+      # Build channels. Channels always at least include
+      # a collection channel, i.e. /tacos, and a member
+      # channel, i.e. /tacos/1, for direct access.
       # 
-      # The member channel has to be the same as the path to
-      # the resource's show action, including a leading
-      # forward slash
-      def member_channel
-        "#{collection_channel}/#{self.to_param}"
-      end
+      # If the model belongs_to other models, two nested
+      # channels are added for each belongs_to association.
+      # E.g., if child belongs_to parent, the two channels
+      # that are added are parents/1/children, and
+      # parents/1/children/1, leaving a total of four channels
+      def channels
+        channels = []
+        plural_name = self.class.name.underscore.pluralize
 
-      # The inferred channel name for the collection. For example,
-      # if the class name is DeliciousTaco, the collection channel
-      # is "delicious_tacos".
-      # 
-      # If the model belongs to another model, the channel is nested
-      # accordingly. For example, if a child belongs to a parent,
-      # the child's collection channel is "parents/1/children".
-      # 
-      # The collection channel has to be the same as the path to
-      # the resource's index action, including a leading forward slash
-      def collection_channel
-        belongs_to_assocations = self.class.reflect_on_all_associations(:belongs_to)
-        own_channel = self.class.name.underscore.pluralize
+        # Add collection's channel
+        channels << "/#{plural_name}"
 
-        if belongs_to_assocations.any?
-          parent = send(belongs_to_assocations.first.name)
-          "#{parent.member_channel}/#{own_channel}"
-        else
-          "/#{own_channel}"
+        # Add member's channel
+        channels << "/#{plural_name}/#{to_param}"
+
+        # Find parent names from belongs_to associations
+        parents = self.class.reflect_on_all_associations(:belongs_to)
+
+        # Add nested channels for each parent
+        parents.map(&:name).each do |parent_name|
+          # Get parent record from name
+          parent = send(parent_name)
+
+          # Get parent class's plural underscore name
+          parent_plural_name = parent_name.to_s.underscore.pluralize
+
+          # Add collection's channel nested under parent's member channel
+          channels << "/#{parent_plural_name}/#{parent.to_param}/#{plural_name}"
+
+          # Add member's channel nested under parent's member channel
+          channels << "/#{parent_plural_name}/#{parent.to_param}/#{plural_name}/#{to_param}"
         end
+
+        channels
       end
 
       private
 
       # Publishes to client. Whoever is subscribed
-      # to the model's channel or the record's channel
-      # gets the message
+      # to the model's channels gets the message
       def publish(action)
-        # Publish to model's channel
-        redis.publish(
-          collection_channel,
-          json(action)
-        )
-
-        # Publish to record#s channel
-        redis.publish(
-          member_channel,
-          json(action)
-        )
+        channels.each do |channel|
+          redis.publish(channel, json(action))
+        end
       end
 
       # JSON containing the type of action (:create, :update
