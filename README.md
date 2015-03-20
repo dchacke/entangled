@@ -413,7 +413,6 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Check if routes really allow options right now. For example, what if I pass in shallow: true? Run rake routes to check!
 - Allow for more than one level of nesting of `#channels` in `Entangled::Model`
 - Support `belongsTo` in front end
 - Support deeply nested `belongs_to`, e.g. `Parent > Child > Grandchild`
