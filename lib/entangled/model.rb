@@ -69,8 +69,8 @@ module Entangled
       # its errors. This is necessary so that errors
       # are sent back to the client along with the
       # resource on create and update
-      def as_json(options = {})
-        attributes.merge(errors: errors).as_json
+      def as_json(options = nil)
+        super(options || attributes).merge(errors: errors).as_json
       end
 
       # Build channels. Channels always at least include
