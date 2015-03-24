@@ -295,5 +295,6 @@ angular.module('entangled', [])
     }.bind(this);
   };
 
+  // Return Entangled object as Angular service
   return Entangled;
 });
