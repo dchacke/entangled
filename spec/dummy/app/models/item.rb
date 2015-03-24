@@ -3,4 +3,6 @@ class Item < ActiveRecord::Base
   entangle
 
   belongs_to :list, required: true
+
+  validates :name, presence: true
 end

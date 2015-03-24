@@ -15,9 +15,9 @@ describe('Entangled', function() {
     List.hasMany('items');
   }));
 
-  describe('.className', function() {
+  describe('constructor', function() {
     it('is "Entangled"', function() {
-      expect(List.className).toBe('Entangled');
+      expect(List.constructor.name).toBe('Entangled');
     });
   });
 
@@ -255,7 +255,7 @@ describe('Entangled', function() {
         // an instance of Entangled, meaning
         // in turn that all class and instance
         // methods are available on it
-        expect(list.items().className).toBe('Entangled');
+        expect(list.items().constructor.name).toBe('Entangled');
         done();
       });
     });
