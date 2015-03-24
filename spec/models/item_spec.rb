@@ -46,5 +46,6 @@ RSpec.describe Item, type: :model do
 
   describe 'Validations' do
     it { is_expected.to validate_presence_of :list }
+    it { is_expected.to validate_presence_of :name }
   end
 end
