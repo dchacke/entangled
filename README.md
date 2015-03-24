@@ -408,7 +408,7 @@ Naturally, all nested records are also synced in real time across all connected 
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
 ## Limitations
-The gem relies heavily on convention over configuration and currently only works with restful style controllers as shown above. More features will be available soon, such as associations, authentication, and more.
+The gem relies heavily on convention over configuration and currently only works with restful style controllers as shown above. More features will be available soon. See the list of development priorities below.
 
 ## Development Priorities
 The following features are to be implemented next:
