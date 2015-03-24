@@ -10,7 +10,7 @@ angular.module('entangled', [])
   // stores the socket's URL it was retrieved from so it
   // can be reused for other requests.
   function Resource(params, webSocketUrl, hasMany) {
-    // Assign proerties
+    // Assign properties
     for (var key in params) {
       // Skip inherent object properties
       if (params.hasOwnProperty(key)) {
