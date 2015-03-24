@@ -13,7 +13,6 @@ angular.module('entangledTest')
       });
 
       $scope.item = $scope.list.items().new();
-      console.log($scope.item);
     });
   });
 
