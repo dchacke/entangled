@@ -9,8 +9,8 @@ angular.module('entangled', [])
   // methods $save(), $destroy, and others. A Resource also
   // stores the socket's URL it was retrieved from so it
   // can be reused for other requests.
-  var Resource = function(params, webSocketUrl, hasMany) {
-    // Assign proerties
+  function Resource(params, webSocketUrl, hasMany) {
+    // Assign properties
     for (var key in params) {
       // Skip inherent object properties
       if (params.hasOwnProperty(key)) {
@@ -160,7 +160,7 @@ angular.module('entangled', [])
 
   // Resources wraps all individual Resource objects
   // in a collection.
-  var Resources = function(resources, webSocketUrl, hasMany) {
+  function Resources(resources, webSocketUrl, hasMany) {
     this.all = [];
 
     for (var i = 0; i < resources.length; i++) {
@@ -178,9 +178,7 @@ angular.module('entangled', [])
   // Entangled is a constructor that takes the URL
   // of the index action on the server where the
   // Resources can be retrieved.
-  var Entangled = function(webSocketUrl) {
-    this.className = 'Entangled';
-
+  function Entangled(webSocketUrl) {
     // Store the root URL that sockets
     // will connect to
     this.webSocketUrl = webSocketUrl;
@@ -297,5 +295,6 @@ angular.module('entangled', [])
     }.bind(this);
   };
 
+  // Return Entangled object as Angular service
   return Entangled;
 });
