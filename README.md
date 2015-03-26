@@ -165,7 +165,7 @@ Otherwise the channels won't work.
 
 If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer), Entangled will use that assigned instance so that you can configure Redis just like you're used to. Otherwise, Entangled will instantiate Redis itself and use its default settings.
 
-#### Associations
+### Associations
 What if you want to only fetch and subscribe to children that belong to a specific parent? Or maybe you want to create a child in your front end and assign it to a specific parent?
 
 Entangled currently supports one `belongs_to` association per model.
