@@ -100,6 +100,18 @@ entangle only: :create
 entangle only: [:create, :update]
 ```
 
+Calling `entangled` creates the following channels (sticking with the example of a `Message` model):
+
+```ruby
+# For collection
+"/messages"
+
+# For member, e.g. /messages/1
+"/messages/:id"
+```
+
+`:id` being the record's id, just as with routes.
+
 ### Controllers
 Your controllers will be a little more lightweight than in a standard restful Rails app. A restful-style controller is expected and should look like this:
 
@@ -152,6 +164,7 @@ Note the following:
 - The `show`, `create`, `update`, and `destroy` actions will expect an instance variable with the singular name of your controller (e.g. `@message` in a `MessagesController`)
 - The instance variables are sent to clients as stringified JSON
 - Strong parameters are expected
+- The path to your controllers' index action has to match the model's channel for the collection, and the path to your controller's show action has to match the model's channel for a single member (which it will automatically if you stay RESTful)
 
 ### Server
 
@@ -168,9 +181,7 @@ If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer)
 ### Associations
 What if you want to only fetch and subscribe to children that belong to a specific parent? Or maybe you want to create a child in your front end and assign it to a specific parent?
 
-Entangled currently supports one `belongs_to` association per model.
-
-For example, imagine the following Parent > Children relationship in your models:
+Imagine the following Parent > Children relationship in your models:
 
 ```ruby
 class Parent < ActiveRecord::Base
@@ -186,6 +197,22 @@ class Child < ActiveRecord::Base
 
   belongs_to :parent
 end
+```
+
+Entangled takes note of every `belongs_to` associations and creates two additional channels for the child model for each `belongs_to` association:
+
+```ruby
+"/parents/:parent_id/children"
+"/parents/:parent_id/children/:id"
+```
+
+So in total, the `Child` model will have all of the following channels:
+
+```ruby
+"/children"
+"/children/:id"
+"/parents/:parent_id/children"
+"/parents/:parent_id/children/:id"
 ```
 
 To reflect this in your front end, you just need to add three things to your app:
@@ -214,7 +241,9 @@ class ChildrenController < ApplicationController
   # Create child of specific parent
   def create
     broadcast do
-      @child = Parent.find(params[:parent_id]).children.create(child_params)
+      @child = Child.new(child_params)
+      @child.parent_id = params[:parent_id]
+      @child.save
     end
   end
 
