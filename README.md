@@ -199,7 +199,7 @@ class Child < ActiveRecord::Base
 end
 ```
 
-Entangled takes note of every `belongs_to` associations and creates two additional channels for the child model for each `belongs_to` association:
+Entangled takes note of every `belongs_to` association and creates two additional channels for each `belongs_to` association in the child model:
 
 ```ruby
 "/parents/:parent_id/children"
