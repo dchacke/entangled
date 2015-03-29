@@ -236,7 +236,7 @@ class ChildrenController < ApplicationController
   # Fetch children of specific parent
   def index
     broadcast do
-      @children = Parent.find(params[:parent_id]).children
+      @children = Child.where(parent_id: params[:parent_id])
     end
   end
 
