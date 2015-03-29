@@ -77,40 +77,38 @@ module Entangled
       # a collection channel, i.e. /tacos, and a member
       # channel, i.e. /tacos/1, for direct access.
       # 
-      # If the model belongs_to other models, two nested
-      # channels are added for each belongs_to association.
-      # E.g., if child belongs_to parent, the two channels
-      # that are added are parents/1/children, and
-      # parents/1/children/1, leaving a total of four channels
-      def channels
+      # If the model belongs_to other models, nested channels
+      # are created for all parents, grand parents, etc
+      # recursively
+      def channels(tail = '')
         channels = []
         plural_name = self.class.name.underscore.pluralize
 
-        # Add collection's channel
-        channels << "/#{plural_name}"
-
-        # Add member's channel
-        channels << "/#{plural_name}/#{to_param}"
-
-        # Find parent names from belongs_to associations
-        parents = self.class.reflect_on_all_associations(:belongs_to)
-
-        # Add nested channels for each parent
-        parents.map(&:name).each do |parent_name|
-          # Get parent record from name
-          parent = send(parent_name)
-
-          # Get parent class's plural underscore name
-          parent_plural_name = parent_name.to_s.underscore.pluralize
-
-          # Add collection's channel nested under parent's member channel
-          channels << "/#{parent_plural_name}/#{parent.to_param}/#{plural_name}"
-
-          # Add member's channel nested under parent's member channel
-          channels << "/#{parent_plural_name}/#{parent.to_param}/#{plural_name}/#{to_param}"
+        # Add collection channel for child only. If the tails
+        # is not empty, the function is being called recursively
+        # for one of the parents, for which only member channels
+        # are needed
+        if tail.empty?
+          collection_channel = "/#{plural_name}" + tail
+          channels << collection_channel
         end
 
-        channels
+        # Add member channel
+        member_channel = "/#{plural_name}/#{to_param}" + tail
+        channels << member_channel
+
+        # Add nested channels for each parent
+        parents.each do |parent|
+          # Only recusively add collection channel
+          # for child
+          if tail.empty?
+            channels << parent.channels(collection_channel)
+          end
+
+          channels << parent.channels(member_channel)
+        end
+
+        channels.flatten
       end
 
       private
@@ -131,6 +129,13 @@ module Entangled
           action: action,
           resource: self
         }.to_json
+      end
+
+      # Find parent classes from belongs_to associations
+      def parents
+        self.class.
+          reflect_on_all_associations(:belongs_to).
+          map{ |a| send(a.name) }
       end
     end
     
