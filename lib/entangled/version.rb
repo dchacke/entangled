@@ -1,3 +1,3 @@
 module Entangled
-  VERSION = "0.0.26"
+  VERSION = "1.0.0"
 end
