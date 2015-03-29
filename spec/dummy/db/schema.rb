@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150316034305) do
+ActiveRecord::Schema.define(version: 20150329034923) do
 
   create_table "barfoos", force: :cascade do |t|
     t.text     "body"
@@ -21,6 +21,12 @@ ActiveRecord::Schema.define(version: 20150316034305) do
 
   create_table "bars", force: :cascade do |t|
     t.text     "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "children", force: :cascade do |t|
+    t.integer  "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -37,6 +43,16 @@ ActiveRecord::Schema.define(version: 20150316034305) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "grandfathers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "grandmothers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.string   "name"
     t.boolean  "complete",   default: false
@@ -49,6 +65,13 @@ ActiveRecord::Schema.define(version: 20150316034305) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "parents", force: :cascade do |t|
+    t.integer  "grandmother_id"
+    t.integer  "grandfather_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
 end
