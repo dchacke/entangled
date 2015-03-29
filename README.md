@@ -103,10 +103,10 @@ entangle only: [:create, :update]
 Calling `entangled` creates the following channels (sticking with the example of a `Message` model):
 
 ```ruby
-# For collection
+# For the collection
 "/messages"
 
-# For member, e.g. /messages/1
+# For a member, e.g. /messages/1
 "/messages/:id"
 ```
 
@@ -174,7 +174,7 @@ Remember to run Redis whenever you run your server:
 $ redis-server
 ```
 
-Otherwise the channels won't work.
+Redis is needed to subscribe and publish to the channels that are created by Entangled internally to communicate over websockets.
 
 If you store your Redis instance in `$redis` or `REDIS` (e.g. in an initializer), Entangled will use that assigned instance so that you can configure Redis just like you're used to. Otherwise, Entangled will instantiate Redis itself and use its default settings.
 
@@ -215,7 +215,9 @@ So in total, the `Child` model will have all of the following channels:
 "/parents/:parent_id/children/:id"
 ```
 
-To reflect this in your front end, you just need to add three things to your app:
+Channels are deeply nested for child/parent/grandparent etc associations. There is no limit. To get a list of all available channels on a record, you can call the method `channels` on any entangled instance.
+
+To reflect associations in your front end, you just need to add three things to your app:
 
 - Nest your routes so that they resemble the parent/child relationship:
 
@@ -268,9 +270,7 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Allow for more than one level of nesting of `#channels` in `Entangled::Model`
 - Support `belongsTo` in front end
-- Support deeply nested `belongs_to`, e.g. `Parent > Child > Grandchild`
 - Support `has_one` association in back end and front end
 - Add offline capabilities
 - Add authentication - with JWT?
