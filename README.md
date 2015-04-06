@@ -270,7 +270,6 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Wrap plain JS file in closure that returns the Entangled constructor
 - Make prefix of create path `create_message` instead of `create_messages`
 - Add something like `spec.required_ruby_version = '>= 2.0.0'` to gemspec, see http://guides.rubygems.org/specification-reference/#required_ruby_version=, and then try downloading gem
 - Support `belongsTo` in front end
