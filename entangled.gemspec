@@ -29,6 +29,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bourne', '~> 1.6'
   s.add_development_dependency 'puma', '~> 2.11'
   s.add_dependency 'tubesock', '~> 0.2'
-  s.add_dependency 'rails', '~> 4.2'
+  s.add_dependency 'rails', '~> 4.0'
   s.add_dependency 'redis', '~> 3.2'
 end
