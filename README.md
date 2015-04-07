@@ -6,7 +6,7 @@ Real time is important. Users have come to expect real time behavior from every 
 
 Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
 
-Currently, Entangled runs on Rails 4.2 and Ruby >= 2.0.0. In the front end, libraries are available in [plain JavaScript](https://github.com/dchacke/entangled-js) and for [Angular](https://github.com/dchacke/entangled-angular).
+Currently, Entangled runs on Rails >= 4.0 and Ruby >= 2.0.0. In the front end, libraries are available in [plain JavaScript](https://github.com/dchacke/entangled-js) and for [Angular](https://github.com/dchacke/entangled-angular).
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -272,7 +272,6 @@ The following features are to be implemented next:
 
 - Do not build channels for nil parents
 - Make prefix of create path `create_message` instead of `create_messages`
-- Add something like `spec.required_ruby_version = '>= 2.0.0'` to gemspec, see http://guides.rubygems.org/specification-reference/#required_ruby_version=, and then try downloading gem
 - Support `belongsTo` in front end
 - Support `has_one` association in back end and front end
 - Add offline capabilities
@@ -280,7 +279,6 @@ The following features are to be implemented next:
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
 - Add `$onChange` function to objects - or could a simple $watch and $watchCollection suffice?
 - Add diagram on how it works to Readme
-- Check if Rails 4.0.0 supported too
 - GNU instead of MIT? Or something else? How to switch?
 - Contact Jessy to tweet about it!
 - Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
