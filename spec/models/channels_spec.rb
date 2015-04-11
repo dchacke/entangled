@@ -14,6 +14,16 @@ RSpec.describe 'Channels', type: :model do
 
   let!(:child) { Child.create(parent_id: parent.id) }
 
+  # Child without parents
+  let!(:orphan) do
+    child = Child.new
+    child.save(validate: false)
+    child
+  end
+
+  # Child that's not persisted
+  let!(:fetus) { Child.new }
+
   describe "grandmother's channels" do
     it 'has two channels' do
       expect(grandmother.channels.size).to eq 2
@@ -107,6 +117,18 @@ RSpec.describe 'Channels', type: :model do
 
     it 'has a member channel nested under its parent and grandfather' do
       expect(child.channels).to include "/grandfathers/#{grandfather.to_param}/parents/#{parent.to_param}/children/#{child.to_param}"
+    end
+  end
+
+  describe "orphan's channels" do
+    it 'does not have any parent channels since it has no parent' do
+      expect(orphan.channels.size).to eq 2
+    end
+  end
+
+  describe "fetus's channel" do
+    it 'does not have any channels since it is not persisted' do
+      expect(fetus.channels).to be_empty
     end
   end
 end
