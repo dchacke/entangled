@@ -34,7 +34,8 @@ RSpec.describe 'Channels', type: :model do
     end
 
     it 'has a member channel' do
-      expect(grandmother.channels).to include "/grandmothers/#{grandmother.to_param}"
+      channel = "/grandmothers/#{grandmother.to_param}"
+      expect(grandmother.channels).to include channel
     end
   end
 
@@ -48,7 +49,8 @@ RSpec.describe 'Channels', type: :model do
     end
 
     it 'has a member channel' do
-      expect(grandfather.channels).to include "/grandfathers/#{grandfather.to_param}"
+      channel = "/grandfathers/#{grandfather.to_param}"
+      expect(grandfather.channels).to include channel
     end
   end
 
@@ -66,19 +68,25 @@ RSpec.describe 'Channels', type: :model do
     end
 
     it 'has a collection channel nested under its grandmother' do
-      expect(parent.channels).to include "/grandmothers/#{grandmother.to_param}/parents"
+      channel = "/grandmothers/#{grandmother.to_param}/parents"
+      expect(parent.channels).to include channel
     end
 
     it 'has a member channel nested under its grandmother' do
-      expect(parent.channels).to include "/grandmothers/#{grandmother.to_param}/parents/#{parent.to_param}"
+      channel = "/grandmothers/#{grandmother.to_param}"\
+                "/parents/#{parent.to_param}"
+      expect(parent.channels).to include channel
     end
 
     it 'has a collection channel nested under its grandfather' do
-      expect(parent.channels).to include "/grandfathers/#{grandfather.to_param}/parents"
+      channel = "/grandfathers/#{grandfather.to_param}/parents"
+      expect(parent.channels).to include channel
     end
 
     it 'has a member channel nested under its grandfather' do
-      expect(parent.channels).to include "/grandfathers/#{grandfather.to_param}/parents/#{parent.to_param}"
+      channel = "/grandfathers/#{grandfather.to_param}"\
+                "/parents/#{parent.to_param}"
+      expect(parent.channels).to include channel
     end
   end
 
@@ -100,23 +108,32 @@ RSpec.describe 'Channels', type: :model do
     end
 
     it 'has a member channel nested under its parent' do
-      expect(child.channels).to include "/parents/#{parent.to_param}/children/#{child.to_param}"
+      channel = "/parents/#{parent.to_param}/children/#{child.to_param}"
+      expect(child.channels).to include channel
     end
 
     it 'has a collection channel nested under its parent and grandmother' do
-      expect(child.channels).to include "/grandmothers/#{grandmother.to_param}/parents/#{parent.to_param}/children"
+      channel = "/grandmothers/#{grandmother.to_param}"\
+                "/parents/#{parent.to_param}/children"
+      expect(child.channels).to include channel
     end
 
     it 'has a member channel nested under its parent and grandmother' do
-      expect(child.channels).to include "/grandmothers/#{grandmother.to_param}/parents/#{parent.to_param}/children/#{child.to_param}"
+      channel = "/grandmothers/#{grandmother.to_param}"\
+                "/parents/#{parent.to_param}/children/#{child.to_param}"
+      expect(child.channels).to include channel
     end
 
     it 'has a collection channel nested under its parent and grandfather' do
-      expect(child.channels).to include "/grandfathers/#{grandfather.to_param}/parents/#{parent.to_param}/children"
+      channel = "/grandfathers/#{grandfather.to_param}"\
+                "/parents/#{parent.to_param}/children"
+      expect(child.channels).to include channel
     end
 
     it 'has a member channel nested under its parent and grandfather' do
-      expect(child.channels).to include "/grandfathers/#{grandfather.to_param}/parents/#{parent.to_param}/children/#{child.to_param}"
+      channel = "/grandfathers/#{grandfather.to_param}"\
+                "/parents/#{parent.to_param}/children/#{child.to_param}"
+      expect(child.channels).to include channel
     end
   end
 
