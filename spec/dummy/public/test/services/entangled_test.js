@@ -172,6 +172,15 @@ describe('Entangled', function() {
         });
       });
     });
+
+    it('marks the record as destroyed', function(done) {
+      List.create({ name: 'foo' }, function(list) {
+        list.$destroy(function() {
+          expect(list.destroyed).toBeTruthy();
+          done();
+        });
+      });
+    });
   });
 
   describe('#$valid', function() {
@@ -243,6 +252,14 @@ describe('Entangled', function() {
         expect(list.$persisted()).not.toBeTruthy();
       });
     });
+
+    describe('destroyed record', function() {
+      it('is false', function() {
+        list.id = 1;
+        list.destroyed = true;
+        expect(list.$persisted()).not.toBeTruthy();
+      });
+    });
   });
 
   describe('#$newRecord', function() {
@@ -262,6 +279,27 @@ describe('Entangled', function() {
       it('is false', function() {
         list.id = 1;
         expect(list.$newRecord()).not.toBeTruthy();
+      });
+    });
+  });
+
+  describe('#$destroyed', function() {
+    var list;
+
+    beforeEach(function() {
+      list = List.new();
+    });
+
+    describe('destroyed record', function() {
+      it('is true', function() {
+        list.destroyed = true;
+        expect(list.$destroyed()).toBeTruthy();
+      });
+    });
+
+    describe('non-destroyed record', function() {
+      it('is false', function() {
+        expect(list.$destroyed()).not.toBeTruthy();
       });
     });
   });
