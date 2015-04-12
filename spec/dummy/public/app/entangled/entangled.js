@@ -159,6 +159,11 @@ angular.module('entangled', [])
       return !!this.id;
     };
 
+    // $newRecord() checks if the record was just instantiated
+    Resource.prototype.$newRecord = function() {
+      return !this.id;
+    };
+
     // Resources wraps all individual Resource objects
     // in a collection.
     function Resources(resources, webSocketUrl, hasMany) {

@@ -245,6 +245,27 @@ describe('Entangled', function() {
     });
   });
 
+  describe('#$newRecord', function() {
+    var list;
+
+    beforeEach(function() {
+      list = List.new();
+    });
+
+    describe('new record', function() {
+      it('is true', function() {
+        expect(list.$newRecord()).toBeTruthy();
+      });
+    });
+
+    describe('persisted record', function() {
+      it('is false', function() {
+        list.id = 1;
+        expect(list.$newRecord()).not.toBeTruthy();
+      });
+    });
+  });
+
   describe('Associations', function() {
     it('has many items', function(done) {
       List.create({ name: 'foo' }, function(list) {
