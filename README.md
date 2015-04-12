@@ -283,6 +283,8 @@ The following features are to be implemented next:
 - Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
 - Freeze destroyed object
+- Add `$newRecord()` method to `Resource`
+- Add `$destroyed()` method to `Resource`
 - Set `$persisted()` to false on a destroyed object
 - Add `.destroyAll()` function to `Resources`
 - Add support for plain JavaScript usage (without Angular) and add section about that to Readme
