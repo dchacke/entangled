@@ -39,7 +39,7 @@ angular.module('entangled', [])
         // Update
         var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/update');
         socket.onopen = function() {
-          socket.send(JSON.stringify(this));
+          socket.send(this.asSnakeJSON());
         }.bind(this);
 
         // Receive updated resource from server
@@ -71,7 +71,7 @@ angular.module('entangled', [])
 
         // Send attributes to server
         socket.onopen = function() {
-          socket.send(JSON.stringify(this));
+          socket.send(this.asSnakeJSON());
         }.bind(this);
 
         // Receive saved resource from server
@@ -174,6 +174,27 @@ angular.module('entangled', [])
     // $destroyed() checks if the record has been destroyed
     Resource.prototype.$destroyed = function() {
       return !!this.destroyed;
+    };
+
+    // asSnakeJSON returns a JSON object that looks just like the
+    // resource, except that the keys are snake case to comply
+    // with Ruby conventions once sent to the server
+    Resource.prototype.asSnakeJSON = function() {
+      var newKey,
+          that = this,
+          newObject = {};
+
+      Object.keys(this).forEach(function(key) {
+        if (that.hasOwnProperty(key)) {
+          newKey = key.match(/[A-Za-z][a-z]*/g).map(function(char) {
+            return char.toLowerCase();
+          }).join("_");
+
+          newObject[newKey] = that[key];
+        }
+      });
+
+      return JSON.stringify(newObject);
     };
 
     // Resources wraps all individual Resource objects

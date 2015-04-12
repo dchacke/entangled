@@ -261,6 +261,13 @@ Pick if you want to use Entangled with plain JavaScript or with Angular:
 - [entangled-js](https://github.com/dchacke/entangled-js)
 - [entangled-angular](https://github.com/dchacke/entangled-angular)
 
+## A Note On Cases
+The case conventions differ in Ruby and JavaScript. `snake_case` is the standard in Ruby, whereas `camelCase` is the standard in JavaScript.
+
+To comply with both standards, Entangled automatically converts attribute names to camel case before sending them from the server to the client to comply with JS conventions, and back to snake case before sending them from the client back to the server to comply with Ruby conventions.
+
+All this means for you is that this enables you to use the conventional case for both environments. For example, a `sender_name` attribute on your model in Rails will turn into a `senderName` attribute in the browser, and vice versa. It would be weird to write camel case in Ruby.
+
 ## Planning Your Infrastructure
 This gem is best used for Rails apps that serve as APIs only and are not concerned with rendering views, since Entangled controllers cannot render views. A front end separate from your Rails app is recommended, either in your Rails app's public directory, or a separate front end app altogether.
 
@@ -270,7 +277,6 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Turn attributes into snake case before sending to server, and turn into camel case before sending to client
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
 - Support `has_one` association in back end and front end and route helper for single resource

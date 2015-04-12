@@ -119,9 +119,22 @@ RSpec.describe List, type: :model do
 
     describe '#as_json' do
       let(:list) { List.create }
+      let(:persisted_list) do
+        list = List.new
+        list.save(validate: false)
+        list
+      end
 
       it 'includes errors' do
         expect(list.as_json["errors"][:name]).to include "can't be blank"
+      end
+
+      it 'converts the attributes to camel case' do
+        expect(persisted_list.as_json["created_at"]).to be_nil
+        expect(persisted_list.as_json["createdAt"]).to be_present
+
+        expect(persisted_list.as_json["updated_at"]).to be_nil
+        expect(persisted_list.as_json["updatedAt"]).to be_present
       end
     end
   end
