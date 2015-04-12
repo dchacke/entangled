@@ -1,5 +1,7 @@
 require 'redis'
 require 'rails/all'
+require 'awrence'
+require 'plissken'
 require 'entangled/version'
 require 'entangled/helpers'
 require 'entangled/model'

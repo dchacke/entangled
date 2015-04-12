@@ -31,4 +31,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'tubesock', '~> 0.2'
   s.add_dependency 'rails', '~> 4.0'
   s.add_dependency 'redis', '~> 3.2'
+
+  # To convert hashes from snake case to camel case
+  s.add_dependency 'awrence', '~> 0.1'
+
+  # To convert hashes from camel case to snake case
+  s.add_dependency 'plissken', '~> 0.2.0'
 end

@@ -68,9 +68,12 @@ module Entangled
       # JSON representation of the resource includes
       # its errors. This is necessary so that errors
       # are sent back to the client along with the
-      # resource on create and update
+      # resource on create and update. Furthermore,
+      # keys are converted to camel case, to comply
+      # with JavaScript conventions on the client
       def as_json(options = nil)
-        super(options || attributes).merge(errors: errors).as_json
+        super(options || attributes).merge(errors: errors).as_json.
+          to_camelback_keys
       end
 
       # Build channels. Channels always at least include
