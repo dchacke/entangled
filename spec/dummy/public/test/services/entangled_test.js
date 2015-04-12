@@ -313,6 +313,14 @@ describe('Entangled', function() {
     });
   });
 
+  describe('#asSnakeJSON', function() {
+    it('returns the resource as JSON with snake case keys', function() {
+      var list = List.new();
+      list.fooBar = 'bar';
+      expect(JSON.parse(list.asSnakeJSON()).foo_bar).toEqual('bar');
+    });
+  });
+
   describe('Associations', function() {
     it('has many items', function(done) {
       List.create({ name: 'foo' }, function(list) {
