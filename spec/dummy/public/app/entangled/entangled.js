@@ -133,6 +133,9 @@ angular.module('entangled', [])
               this[key] = data.resource[key];
             }
           }
+
+          // Mark resource as destroyed
+          this.destroyed = true;
         }
 
         if (callback) callback(this);
@@ -156,7 +159,17 @@ angular.module('entangled', [])
     // $persisted() checks if the record was successfully stored
     // in the back end's database
     Resource.prototype.$persisted = function() {
-      return !!this.id;
+      return !(this.$newRecord() || this.$destroyed());
+    };
+
+    // $newRecord() checks if the record was just instantiated
+    Resource.prototype.$newRecord = function() {
+      return !this.id;
+    };
+
+    // $destroyed() checks if the record has been destroyed
+    Resource.prototype.$destroyed = function() {
+      return !!this.destroyed;
     };
 
     // Resources wraps all individual Resource objects
