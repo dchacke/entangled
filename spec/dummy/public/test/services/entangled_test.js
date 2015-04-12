@@ -42,7 +42,7 @@ describe('Entangled', function() {
     it('creates a list', function(done) {
       List.create({ name: 'foo' }, function(list) {
         expect(list.id).toBeDefined();
-        expect(list.created_at).toBeDefined();
+        expect(list.createdAt).toBeDefined();
         done();
       });
     });
@@ -62,7 +62,7 @@ describe('Entangled', function() {
       List.create({ name: 'foo' }, function(list) {
         List.find(list.id, function(list) {
           expect(list.id).toBeDefined();
-          expect(list.created_at).toBeDefined();
+          expect(list.createdAt).toBeDefined();
           done();
         });
       });
@@ -76,7 +76,7 @@ describe('Entangled', function() {
 
         list.$save(function() {
           expect(list.id).toBeDefined();
-          expect(list.created_at).toBeDefined();
+          expect(list.createdAt).toBeDefined();
           done();
         });
       });
@@ -97,11 +97,11 @@ describe('Entangled', function() {
       it('updates an existing list', function(done) {
         List.create({ name: 'foo' }, function(list) {
           list.name = 'new name';
-          var oldUpdatedAt = list.updated_at;
+          var oldUpdatedAt = list.updatedAt;
 
           list.$save(function() {
             expect(list.name).toBe('new name');
-            expect(list.updated_at).not.toEqual(oldUpdatedAt);
+            expect(list.updatedAt).not.toEqual(oldUpdatedAt);
             done();
           });
         });
@@ -113,12 +113,12 @@ describe('Entangled', function() {
           // empty string, causing model validations
           // in ActiveRecord to fail
           list.name = '';
-          var oldUpdatedAt = list.updated_at;
+          var oldUpdatedAt = list.updatedAt;
 
           list.$save(function() {
             // Assert that the list was not updated
             // by the server
-            expect(list.updated_at).toBe(oldUpdatedAt);
+            expect(list.updatedAt).toBe(oldUpdatedAt);
             expect(list.errors.name.indexOf("can't be blank") > -1).toBeTruthy();
             done();
           });
@@ -130,11 +130,11 @@ describe('Entangled', function() {
   describe('#$update', function() {
     it('updates a list in place', function(done) {
       List.create({ name: 'foo' }, function(list) {
-        var oldUpdatedAt = list.updated_at;
+        var oldUpdatedAt = list.updatedAt;
 
         list.$update({ name: 'new name' }, function() {
           expect(list.name).toBe('new name');
-          expect(list.updated_at).not.toEqual(oldUpdatedAt);
+          expect(list.updatedAt).not.toEqual(oldUpdatedAt);
           done();
         });
       });
@@ -142,7 +142,7 @@ describe('Entangled', function() {
 
     it('receives validation messages', function(done) {
       List.create({ name: 'foo' }, function(list) {
-        var oldUpdatedAt = list.updated_at;
+        var oldUpdatedAt = list.updatedAt;
 
         // Make invalid by setting the name to an
         // empty string, causing model validations
@@ -150,7 +150,7 @@ describe('Entangled', function() {
         list.$update({ name: '' }, function() {
           // Assert that the list was not updated
           // by the server
-          expect(list.updated_at).toBe(oldUpdatedAt);
+          expect(list.updatedAt).toBe(oldUpdatedAt);
           expect(list.errors.name.indexOf("can't be blank") > -1).toBeTruthy();
           done();
         });
