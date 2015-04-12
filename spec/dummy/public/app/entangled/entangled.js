@@ -136,6 +136,10 @@ angular.module('entangled', [])
 
           // Mark resource as destroyed
           this.destroyed = true;
+
+          // Freeze resource so as to prevent future
+          // modifications
+          Object.freeze(this);
         }
 
         if (callback) callback(this);

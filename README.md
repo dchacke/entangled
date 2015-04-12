@@ -282,7 +282,6 @@ The following features are to be implemented next:
 - Contact Jessy to tweet about it!
 - Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
-- Freeze destroyed object
 - Add `.destroyAll()` function to `Resources`
 
 ## Contributing

@@ -181,6 +181,15 @@ describe('Entangled', function() {
         });
       });
     });
+
+    it('freezes the record', function(done) {
+      List.create({ name: 'foo' }, function(list) {
+        list.$destroy(function() {
+          expect(Object.isFrozen(list)).toBeTruthy();
+          done();
+        });
+      });
+    });
   });
 
   describe('#$valid', function() {
