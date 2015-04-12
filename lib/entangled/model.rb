@@ -82,6 +82,11 @@ module Entangled
       # recursively
       def channels(tail = '')
         channels = []
+
+        # If the record is not persisted, it should not have
+        # any channels
+        return channels unless persisted?
+
         plural_name = self.class.name.underscore.pluralize
 
         # Add collection channel for child only. If the tails
@@ -131,11 +136,13 @@ module Entangled
         }.to_json
       end
 
-      # Find parent classes from belongs_to associations
+      # Find parent classes from belongs_to associations that
+      # are not nil
       def parents
         self.class.
           reflect_on_all_associations(:belongs_to).
-          map{ |a| send(a.name) }
+          map{ |a| send(a.name) }.
+          reject(&:nil?)
       end
     end
     
