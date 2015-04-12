@@ -272,7 +272,7 @@ The following features are to be implemented next:
 
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
-- Support `has_one` association in back end and front end
+- Support `has_one` association in back end and front end and route helper for single resource
 - Add offline capabilities
 - Add authentication - with JWT?
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
@@ -282,10 +282,7 @@ The following features are to be implemented next:
 - Contact Jessy to tweet about it!
 - Handle errors gracefully (e.g. finding a non-existent id, etc, authorization error in the back end, timeouts, etc)
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
-- Freeze destroyed object
-- Set `$persisted()` to false on a destroyed object
 - Add `.destroyAll()` function to `Resources`
-- Add support for plain JavaScript usage (without Angular) and add section about that to Readme
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
