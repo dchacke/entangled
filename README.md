@@ -272,7 +272,7 @@ The following features are to be implemented next:
 
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
-- Support `has_one` association in back end and front end
+- Support `has_one` association in back end and front end and route helper for single resource
 - Add offline capabilities
 - Add authentication - with JWT?
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
