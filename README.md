@@ -268,6 +268,12 @@ Pick if you want to use Entangled with plain JavaScript or with Angular:
 - [entangled-js](https://github.com/dchacke/entangled-js)
 - [entangled-angular](https://github.com/dchacke/entangled-angular)
 
+The following versions are compatible:
+
+| entangled.gem | entangled-js.js | entangled-angular.js |
+|---------------|-----------------|----------------------|
+| 1.4.1         | 1.3.0           | 1.3.0                |
+
 ## A Note On Cases
 The case conventions differ in Ruby and JavaScript. `snake_case` is the standard in Ruby, whereas `camelCase` is the standard in JavaScript.
 
@@ -285,7 +291,6 @@ The gem relies heavily on convention over configuration and currently only works
 The following features are to be implemented next:
 
 - Make broadcast method non-blocking using [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby); update Readme and repo description accordingly
-- Add compatibility table for Ruby/Angular/JS versions
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
 - Support `has_one` association in back end and front end and route helper for single resource
