@@ -277,6 +277,8 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
+- Parse tubesock message `m` if available and assign to params in other controller actions before yield
+- Add compatibility table for Ruby/Angular/JS versions
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
 - Support `has_one` association in back end and front end and route helper for single resource
