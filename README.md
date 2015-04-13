@@ -150,6 +150,12 @@ class MessagesController < ApplicationController
     end
   end
 
+  # def custom_action
+  #   broadcast do
+  #     # do whatever
+  #   end
+  # end
+
 private
   def message_params
     # params logic here
@@ -165,6 +171,7 @@ Note the following:
 - The instance variables are sent to clients as stringified JSON
 - Strong parameters are expected
 - The path to your controllers' index action has to match the model's channel for the collection, and the path to your controller's show action has to match the model's channel for a single member (which it will automatically if you stay RESTful)
+- You can add custom actions on top of the five RESTful ones; JSON sent through sockets is available in the params hash
 
 ### Server
 
@@ -277,7 +284,6 @@ The gem relies heavily on convention over configuration and currently only works
 ## Development Priorities
 The following features are to be implemented next:
 
-- Parse tubesock message `m` if available and assign to params in other controller actions before yield
 - Make broadcast method non-blocking using [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby); update Readme and repo description accordingly
 - Add compatibility table for Ruby/Angular/JS versions
 - Make prefix of create path `create_message` instead of `create_messages`

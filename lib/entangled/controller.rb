@@ -156,7 +156,7 @@ module Entangled
           # happens in the model's callback
           when 'create'
             tubesock.onmessage do |m|
-              params[resource_name.to_sym] = JSON.parse(m)
+              set_resource_params(m)
               yield
 
               # Send resource that was just created back to client. The resource
@@ -177,7 +177,7 @@ module Entangled
           # with attributes sent to the socket
           when 'update'
             tubesock.onmessage do |m|
-              params[resource_name.to_sym] = JSON.parse(m)
+              set_resource_params(m)
               yield
 
               # Send resource that was just updated back to client. The resource
@@ -212,12 +212,20 @@ module Entangled
           # of the socket. Other custom actions can be added through this
           else
             tubesock.onmessage do |m|
+              # If message was sent, attach to params (rescue exception if
+              # message not valid JSON or message not present)
+              params.merge!(JSON.parse(m)) rescue nil
+
               yield
 
               close_db_connection
             end
           end
         end
+      end
+
+      def set_resource_params(message_from_socket)
+        params[resource_name.to_sym] = JSON.parse(message_from_socket)
       end
     end
     

@@ -7,7 +7,9 @@ angular.module('entangledTest')
 
   $scope.create = function() {
     $scope.list.$save(function() {
-      $scope.list = List.new();
+      $scope.$apply(function() {
+        $scope.list = List.new();
+      });
     });
   };
 
