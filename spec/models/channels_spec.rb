@@ -24,6 +24,9 @@ RSpec.describe 'Channels', type: :model do
   # Child that's not persisted
   let!(:fetus) { Child.new }
 
+  # Child that's been destroyed
+  let(:dead_body) { child.destroy }
+
   describe "grandmother's channels" do
     it 'has two channels' do
       expect(grandmother.channels.size).to eq 2
@@ -143,9 +146,15 @@ RSpec.describe 'Channels', type: :model do
     end
   end
 
-  describe "fetus's channel" do
-    it 'does not have any channels since it is not persisted' do
+  describe "fetus's channels" do
+    it 'does not have any channels since it is a new record' do
       expect(fetus.channels).to be_empty
+    end
+  end
+
+  describe "dead body's channels" do
+    it 'still has all channels even though it has been destroyed' do
+      expect(dead_body.channels.size).to eq 8
     end
   end
 end
