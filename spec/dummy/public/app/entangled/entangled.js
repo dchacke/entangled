@@ -147,7 +147,7 @@ angular.module('entangled', [])
     };
 
     // $valid() checks if any errors are attached to the object
-    // and return false if so, false otherwise. This doesn't actually
+    // and return false if so, true otherwise. This doesn't actually
     // invoke server side validations, so it should only be used
     // after calling $save() to check if the record was successfully
     // stored in the database

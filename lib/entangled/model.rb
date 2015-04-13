@@ -86,9 +86,8 @@ module Entangled
       def channels(tail = '')
         channels = []
 
-        # If the record is not persisted, it should not have
-        # any channels
-        return channels unless persisted?
+        # If the record is new, it should not have any channels
+        return channels if new_record?
 
         plural_name = self.class.name.underscore.pluralize
 
