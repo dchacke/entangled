@@ -278,6 +278,7 @@ The gem relies heavily on convention over configuration and currently only works
 The following features are to be implemented next:
 
 - Parse tubesock message `m` if available and assign to params in other controller actions before yield
+- Make broadcast method non-blocking using [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby); update Readme and repo description accordingly
 - Add compatibility table for Ruby/Angular/JS versions
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
