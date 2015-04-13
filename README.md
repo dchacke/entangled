@@ -268,6 +268,12 @@ Pick if you want to use Entangled with plain JavaScript or with Angular:
 - [entangled-js](https://github.com/dchacke/entangled-js)
 - [entangled-angular](https://github.com/dchacke/entangled-angular)
 
+The following versions are compatible:
+
+| entangled.gem | entangled-js.js | entangled-angular.js |
+|---------------|-----------------|----------------------|
+| 1.4.1         | 1.3.0           | 1.3.0                |
+
 ## A Note On Cases
 The case conventions differ in Ruby and JavaScript. `snake_case` is the standard in Ruby, whereas `camelCase` is the standard in JavaScript.
 
