@@ -294,7 +294,10 @@ The following features are to be implemented next:
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
 - Support `has_one` association in back end and front end and route helper for single resource
-- Add offline capabilities
+- Support scoping in back end
+- Add support for scopes and where clauses in front end once back end can do scopes à la [Spyke](https://github.com/balvig/spyke)
+- Display results of interactions to client immediately without going through the server; add server interactions to queue and constantly dequeue; if result from server conflicts with client state, update client accordingly
+- Add offline capabilities, i.e. only dequeue server interactions once internet connection established
 - Add authentication - with JWT?
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
 - Add `$onChange` function to objects - or could a simple $watch and $watchCollection suffice?
