@@ -291,7 +291,6 @@ The gem relies heavily on convention over configuration and currently only works
 The following features are to be implemented next:
 
 - Put up example application (the todo list?)
-- Check if threading is necessary in `#broadcast`
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `belongsTo` in front end
 - Support `has_one` association in back end and front end and route helper for single resource
