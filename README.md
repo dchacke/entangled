@@ -288,7 +288,7 @@ This gem is best used for Rails apps that serve as APIs only and are not concern
 The gem relies heavily on convention over configuration and currently only works with restful style controllers as shown above. More features will be available soon. See the list of development priorities below.
 
 ## Debugging Websockets
-To debug websockets from your terminal, you can use curl. For example, to make a handshake with a socket at `/messages` (a route you need to have set up), you can do the following:
+To debug websockets from your terminal, you can use curl. For example, to do a handshake with a socket at `/messages` (a route you need to have set up), you can do the following:
 
 ```shell
 curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Host: echo.websocket.org" -H "Origin: http://localhost:3000" http://localhost:3000/messages
