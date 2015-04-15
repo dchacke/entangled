@@ -272,6 +272,7 @@ The following versions are compatible:
 
 | entangled.gem | entangled-js.js | entangled-angular.js |
 |---------------|-----------------|----------------------|
+| 1.4.1         | 1.3.1           | 1.3.1                |
 | 1.4.1         | 1.3.0           | 1.3.0                |
 
 ## A Note On Cases
@@ -287,14 +288,27 @@ This gem is best used for Rails apps that serve as APIs only and are not concern
 ## Limitations
 The gem relies heavily on convention over configuration and currently only works with restful style controllers as shown above. More features will be available soon. See the list of development priorities below.
 
+## Debugging Websockets
+To debug websockets from your terminal, you can use curl. For example, to do a handshake with a socket at `/messages` (a route you need to have set up), you can do the following:
+
+```shell
+curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Host: echo.websocket.org" -H "Origin: http://localhost:3000" http://localhost:3000/messages
+```
+
+More information [here](http://www.thenerdary.net/post/24889968081/debugging-websockets-with-curl).
+
 ## Development Priorities
 The following features are to be implemented next:
 
-- Make broadcast method non-blocking using [concurrent-ruby](https://github.com/ruby-concurrency/concurrent-ruby); update Readme and repo description accordingly
+- Throw error if parent id not set on child when trying to fetch parent
+- Support multiple `hasMany` and `belongsTo` associations in front end
+- Put up example application (the todo list?)
 - Make prefix of create path `create_message` instead of `create_messages`
-- Support `belongsTo` in front end
 - Support `has_one` association in back end and front end and route helper for single resource
-- Add offline capabilities
+- Support scoping in back end
+- Add support for scopes and where clauses in front end once back end can do scopes à la [Spyke](https://github.com/balvig/spyke)
+- Display results of interactions to client immediately without going through the server; add server interactions to queue and constantly dequeue; if result from server conflicts with client state, update client accordingly
+- Add offline capabilities, i.e. only dequeue server interactions once internet connection established
 - Add authentication - with JWT?
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
 - Add `$onChange` function to objects - or could a simple $watch and $watchCollection suffice?

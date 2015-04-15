@@ -10,7 +10,7 @@ angular.module('entangled', [])
     // methods $save(), $destroy, and others. A Resource also
     // stores the socket's URL it was retrieved from so it
     // can be reused for other requests.
-    function Resource(params, webSocketUrl, hasMany) {
+    function Resource(params, webSocketUrl, hasMany, belongsTo) {
       // Assign properties
       for (var key in params) {
         // Skip inherent object properties
@@ -20,13 +20,45 @@ angular.module('entangled', [])
       }
 
       // Assign socket URL
-      this.webSocketUrl = webSocketUrl;
+      this.socket = webSocketUrl;
+      this.webSocketUrl = function() {
+        // If a parent is associated, the websocket URL looks something
+        // like ws://localhost:3000/parents/:parentId/children. The
+        // following replaces :parentId with the actual parent's id
+        if (belongsTo) {
+          var parentIdPlaceholder = ':' + belongsTo + 'Id';
+          var parentId = this[belongsTo + 'Id'];
+          var newWebSocketUrl = this.socket.replace(parentIdPlaceholder, parentId);
+          return newWebSocketUrl;
+        } else {
+          // If no parent is associated, just return the plain URL
+          return this.socket;
+        }
+      };
 
-      // Assign has many relationship
+      // Assign parent relationship
       if (hasMany) {
         this[hasMany] = function() {
-          return new Entangled(this.webSocketUrl + '/' + this.id + '/' + hasMany);
+          return new Entangled(this.webSocketUrl() + '/' + this.id + '/' + hasMany);
         };
+      }
+
+      // Assign child relationship
+      if (belongsTo) {
+        this[belongsTo] = function(callback) {
+          // Infer socket URL to parent from child's socket URL
+          var socketElements = this.webSocketUrl().split('/');
+          var parentSocket = socketElements.slice(socketElements.length - 6, 4).join('/');
+
+          // Instantiate new parent and get its id
+          var Parent = new Entangled(parentSocket);
+          var parentId = this[belongsTo + 'Id'];
+
+          // Find parent and pass it to callback
+          Parent.find(parentId, function(parent) {
+            callback(parent);
+          });
+        }.bind(this);
       }
     };
 
@@ -37,7 +69,7 @@ angular.module('entangled', [])
     Resource.prototype.$save = function(callback) {
       if (this.id) {
         // Update
-        var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/update');
+        var socket = new WebSocket(this.webSocketUrl() + '/' + this.id + '/update');
         socket.onopen = function() {
           socket.send(this.asSnakeJSON());
         }.bind(this);
@@ -57,7 +89,7 @@ angular.module('entangled', [])
 
           // Assign has many association. The association
           // can only be available to a persisted record
-          this[this.hasMany] = new Entangled(this.webSocketUrl + '/' + this.id + '/' + this.hasMany);
+          this[this.hasMany] = new Entangled(this.webSocketUrl() + '/' + this.id + '/' + this.hasMany);
 
           // Pass 'this' to callback for create
           // function so this the create function
@@ -67,7 +99,7 @@ angular.module('entangled', [])
         }.bind(this);
       } else {
         // Create
-        var socket = new WebSocket(this.webSocketUrl + '/create');
+        var socket = new WebSocket(this.webSocketUrl() + '/create');
 
         // Send attributes to server
         socket.onopen = function() {
@@ -114,7 +146,7 @@ angular.module('entangled', [])
     // $destroy() will send a request to the server to
     // destroy an existing record.
     Resource.prototype.$destroy = function(callback) {
-      var socket = new WebSocket(this.webSocketUrl + '/' + this.id + '/destroy');
+      var socket = new WebSocket(this.webSocketUrl() + '/' + this.id + '/destroy');
 
       socket.onopen = function() {
         // It's fine to send an empty message since the
@@ -223,16 +255,22 @@ angular.module('entangled', [])
       this.webSocketUrl = webSocketUrl;
     };
 
-    // hasMany() adds the appropriate association and
-    // sets up websockets accordingly
-    Entangled.prototype.hasMany = function(resources) {
-      this.hasMany = resources;
+    // hasMany() adds the appropriate parent association
+    // and sets up websockets accordingly
+    Entangled.prototype.hasMany = function(resourcesName) {
+      this.hasMany = resourcesName;
+    };
+
+    // belongsTo() adds the appropriate child association
+    // and sets up websockets accordingly
+    Entangled.prototype.belongsTo = function(resourceName) {
+      this.belongsTo = resourceName;
     };
 
     // Function to instantiate a new Resource, optionally
     // with given parameters
     Entangled.prototype.new = function(params) {
-      return new Resource(params, this.webSocketUrl, this.hasMany);
+      return new Resource(params, this.webSocketUrl, this.hasMany, this.belongsTo);
     };
 
     // Retrieve all Resources from the root of the socket's

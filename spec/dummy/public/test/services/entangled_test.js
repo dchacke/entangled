@@ -5,7 +5,8 @@ describe('Entangled', function() {
 
   var $injector,
   Entangled,
-  List;
+  List,
+  Item;
 
   beforeEach(inject(function() {
     $injector = angular.injector(['entangled']);
@@ -13,6 +14,9 @@ describe('Entangled', function() {
 
     List = new Entangled('ws://localhost:3000/lists');
     List.hasMany('items');
+
+    Item = new Entangled('ws://localhost:3000/lists/:listId/items');
+    Item.belongsTo('list');
   }));
 
   describe('constructor', function() {
@@ -322,17 +326,41 @@ describe('Entangled', function() {
   });
 
   describe('Associations', function() {
-    it('has many items', function(done) {
-      List.create({ name: 'foo' }, function(list) {
-        // Assert that relationship defined
-        expect(list.items).toBeDefined();
+    describe('List', function() {
+      it('has many items', function(done) {
+        List.create({ name: 'foo' }, function(list) {
+          // Assert that relationship defined
+          expect(list.items).toBeDefined();
 
-        // Assert that relationship is also
-        // an instance of Entangled, meaning
-        // in turn that all class and instance
-        // methods are available on it
-        expect(list.items().constructor.name).toBe('Entangled');
-        done();
+          // Assert that relationship is also
+          // an instance of Entangled, meaning
+          // in turn that all class and instance
+          // methods are available on it
+          expect(list.items().constructor.name).toBe('Entangled');
+          done();
+        });
+      });
+    });
+
+    describe('Item', function() {
+      it('belongs to a list', function(done) {
+        // Create parent list
+        List.create({ name: 'foo' }, function(list) {
+          // Create child item
+          Item.create({ name: 'foo', listId: list.id }, function(item) {
+            // Assert that creation successful
+            expect(item.$persisted()).toBeTruthy();
+
+            // Assert parent relationship
+            // expect(item.list).toBe(list);
+            var originalList = list;
+
+            item.list(function(list) {
+              expect(originalList.id).toBe(list.id);
+              done();
+            });
+          });
+        });
       });
     });
   });
