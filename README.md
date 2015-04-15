@@ -299,9 +299,10 @@ More information [here](http://www.thenerdary.net/post/24889968081/debugging-web
 ## Development Priorities
 The following features are to be implemented next:
 
+- Support multiple `hasMany` and `belongsTo` associations in front end
 - Put up example application (the todo list?)
 - Make prefix of create path `create_message` instead of `create_messages`
-- Support `belongsTo` in front end
+- Support `belongsTo` in front end and add section about it to JS Readmes
 - Support `has_one` association in back end and front end and route helper for single resource
 - Support scoping in back end
 - Add support for scopes and where clauses in front end once back end can do scopes à la [Spyke](https://github.com/balvig/spyke)
