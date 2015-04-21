@@ -7,7 +7,7 @@ angular.module('entangled', [])
     // Every response coming from the server will be wrapped
     // in a Resource constructor to represent a CRUD-able
     // resource that can be saved and destroyed using the
-    // methods $save(), $destroy, and others. A Resource also
+    // methods $save, $destroy, and others. A Resource also
     // stores the socket's URL it was retrieved from so it
     // can be reused for other requests.
     function Resource(params, webSocketUrl, hasMany, belongsTo) {
