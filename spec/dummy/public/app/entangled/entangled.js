@@ -7,7 +7,7 @@ angular.module('entangled', [])
     // Every response coming from the server will be wrapped
     // in a Resource constructor to represent a CRUD-able
     // resource that can be saved and destroyed using the
-    // methods $save(), $destroy, and others. A Resource also
+    // methods $save, $destroy, and others. A Resource also
     // stores the socket's URL it was retrieved from so it
     // can be reused for other requests.
     function Resource(params, webSocketUrl, hasMany, belongsTo) {
@@ -55,8 +55,12 @@ angular.module('entangled', [])
           var parentId = this[belongsTo + 'Id'];
 
           // Find parent and pass it to callback
-          Parent.find(parentId, function(parent) {
-            callback(parent);
+          Parent.find(parentId, function(err, parent) {
+            if (err) {
+              callback(err)
+            } else {
+              callback(null, parent);
+            }
           });
         }.bind(this);
       }
@@ -79,6 +83,14 @@ angular.module('entangled', [])
           if (event.data) {
             var data = JSON.parse(event.data);
 
+            if (data.error) {
+              if (callback) {
+                callback(new Error(data.error));
+              }
+
+              return;
+            }
+
             // Assign/override new data (such as updated_at, etc)
             if (data.resource) {
               for (key in data.resource) {
@@ -95,7 +107,9 @@ angular.module('entangled', [])
           // function so this the create function
           // can pass the created resource to its
           // own callback; not needed for $save per se
-          if (callback) callback(this);
+          if (callback) {
+            callback(null, this);
+          }
         }.bind(this);
       } else {
         // Create
@@ -111,6 +125,14 @@ angular.module('entangled', [])
           if (event.data) {
             var data = JSON.parse(event.data);
 
+            if (data.error) {
+              if (callback) {
+                callback(new Error(data.error));
+              }
+
+              return;
+            }
+
             // Assign/override new data (such as id, created_at,
             // updated_at, etc)
             if (data.resource) {
@@ -124,7 +146,9 @@ angular.module('entangled', [])
           // function so this the create function
           // can pass the created resource to its
           // own callback; not needed for $save per se
-          if (callback) callback(this);
+          if (callback) {
+            callback(null, this)
+          };
         }.bind(this);
       }
     };
@@ -147,6 +171,7 @@ angular.module('entangled', [])
     // destroy an existing record.
     Resource.prototype.$destroy = function(callback) {
       var socket = new WebSocket(this.webSocketUrl() + '/' + this.id + '/destroy');
+      // var socket = new WebSocket(this.webSocketUrl() + '/' + '2343345' + '/destroy');
 
       socket.onopen = function() {
         // It's fine to send an empty message since the
@@ -158,6 +183,14 @@ angular.module('entangled', [])
       socket.onmessage = function(event) {
         if (event.data) {
           var data = JSON.parse(event.data);
+
+          if (data.error) {
+            if (callback) {
+              callback(new Error(data.error));
+            }
+
+            return;
+          }
 
           // Assign/override new data
           if (data.resource) {
@@ -174,7 +207,9 @@ angular.module('entangled', [])
           Object.freeze(this);
         }
 
-        if (callback) callback(this);
+        if (callback) {
+          callback(null, this);
+        }
       }.bind(this);
     };
 
@@ -284,6 +319,12 @@ angular.module('entangled', [])
           // Convert message to JSON
           var data = JSON.parse(event.data);
 
+          if (data.error) {
+            callback(new Error(data.error));
+
+            return;
+          }
+
           // If the collection of Resources was sent
           if (data.resources) {
             // Store retrieved Resources in property
@@ -326,7 +367,7 @@ angular.module('entangled', [])
 
         // Run the callback and pass in the
         // resulting collection
-        callback(this.resources.all);
+        callback(null, this.resources.all);
       }.bind(this);
     };
 
@@ -346,6 +387,12 @@ angular.module('entangled', [])
         if (event.data.length) {
           // Parse message and convert to JSON
           var data = JSON.parse(event.data);
+
+          if (data.error) {
+            callback(new Error(data.error));
+
+            return;
+          }
 
           if (data.resource && !data.action) {
             // If the Resource was sent from the server,
@@ -368,7 +415,7 @@ angular.module('entangled', [])
         }
 
         // Run callback with retrieved Resource
-        callback(this.resource);
+        callback(null, this.resource);
       }.bind(this);
     };
 

@@ -17,7 +17,7 @@ angular.module('entangledTest')
     list.$destroy();
   };
 
-  List.all(function(lists) {
+  List.all(function(err, lists) {
     $scope.$apply(function() {
       $scope.lists = lists;
     });
