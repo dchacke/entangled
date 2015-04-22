@@ -61,171 +61,197 @@ module Entangled
       def broadcast(&block)
         # Use hijack to handle sockets
         hijack do |tubesock|
-          # Assuming restful controllers, the behavior of
-          # this method has to change depending on the action
-          # it's being used in
-          case action_name
+          begin
+            # Assuming restful controllers, the behavior of
+            # this method has to change depending on the action
+            # it's being used in
+            case action_name
 
-          # If the controller action is 'index', a collection
-          # of records should be broadcast
-          when 'index'
-            yield
+            # If the controller action is 'index', a collection
+            # of records should be broadcast
+            when 'index'
+              execute_action(tubesock, block)
 
-            # The following code will run if an instance
-            # variable with the plural resource name has been
-            # assigned in yield. For example, if a
-            # TacosController's index action looked something
-            # like this:
+              # The following code will run if an instance
+              # variable with the plural resource name has been
+              # assigned in yield. For example, if a
+              # TacosController's index action looked something
+              # like this:
 
-            # def index
-            #   broadcast do
-            #     @tacos = Taco.all
-            #   end
-            # end
+              # def index
+              #   broadcast do
+              #     @tacos = Taco.all
+              #   end
+              # end
 
-            # ...then @tacos will be broadcast to all connected
-            # clients. The variable name, in this example,
-            # has to be "@tacos"
-            if collection
-              redis_thread = Thread.new do
-                redis.subscribe channel do |on|
-                  # Broadcast messages to all connected clients
-                  on.message do |channel, message|
-                    tubesock.send_data message
+              # ...then @tacos will be broadcast to all connected
+              # clients. The variable name, in this example,
+              # has to be "@tacos"
+              if collection
+                redis_thread = Thread.new do
+                  redis.subscribe channel do |on|
+                    # Broadcast messages to all connected clients
+                    on.message do |channel, message|
+                      tubesock.send_data message
+                    end
+
+                    # Send message to whoever just subscribed
+                    tubesock.send_data({
+                      resources: collection
+                    }.to_json)
+
+                    close_db_connection
                   end
+                end
 
-                  # Send message to whoever just subscribed
-                  tubesock.send_data({
-                    resources: collection
-                  }.to_json)
-
-                  close_db_connection
+                # When client disconnects, kill the thread
+                tubesock.onclose do
+                  redis_thread.kill
                 end
               end
 
-              # When client disconnects, kill the thread
-              tubesock.onclose do
-                redis_thread.kill
-              end
-            end
+            # If the controller's action name is 'show', a single record
+            # should be broadcast
+            when 'show'
+              execute_action(tubesock, block)
 
-          # If the controller's action name is 'show', a single record
-          # should be broadcast
-          when 'show'
-            yield
+              # The following code will run if an instance variable
+              # with the singular resource name has been assigned in
+              # yield. For example, if a TacosController's show action
+              # looked something like this:
 
-            # The following code will run if an instance variable
-            # with the singular resource name has been assigned in
-            # yield. For example, if a TacosController's show action
-            # looked something like this:
+              # def show
+              #   broadcast do
+              #     @taco = Taco.find(params[:id])
+              #   end
+              # end
 
-            # def show
-            #   broadcast do
-            #     @taco = Taco.find(params[:id])
-            #   end
-            # end
+              # ...then @taco will be broadcast to all connected clients.
+              # The variable name, in this example, has to be "@taco"
+              if member
+                redis_thread = Thread.new do
+                  redis.subscribe channel do |on|
+                    # Broadcast messages to all connected clients
+                    on.message do |channel, message|
+                      tubesock.send_data message
+                    end
 
-            # ...then @taco will be broadcast to all connected clients.
-            # The variable name, in this example, has to be "@taco"
-            if member
-              redis_thread = Thread.new do
-                redis.subscribe channel do |on|
-                  # Broadcast messages to all connected clients
-                  on.message do |channel, message|
-                    tubesock.send_data message
+                    # Send message to whoever just subscribed
+                    tubesock.send_data({
+                      resource: member
+                    }.to_json)
+
+                    close_db_connection
                   end
+                end
 
-                  # Send message to whoever just subscribed
+                # When client disconnects, kill the thread
+                tubesock.onclose do
+                  redis_thread.kill
+                end
+              end
+
+            # If the controller's action name is 'create', a record should be
+            # created. Before yielding, the params hash has to be prepared
+            # with attributes sent to the socket. The actual publishing
+            # happens in the model's callback
+            when 'create'
+              tubesock.onmessage do |m|
+                set_resource_params(m)
+                execute_action(tubesock, block)
+
+                # Send resource that was just created back to client. The resource
+                # on the client will be overridden with this one. This is important
+                # so that the id, created_at and updated_at and possibly other
+                # attributes arrive on the client
+                if member
                   tubesock.send_data({
                     resource: member
                   }.to_json)
-
-                  close_db_connection
                 end
+
+                close_db_connection
               end
 
-              # When client disconnects, kill the thread
-              tubesock.onclose do
-                redis_thread.kill
-              end
-            end
+            # If the controller's action name is 'update', a record should be
+            # updated. Before yielding, the params hash has to be prepared
+            # with attributes sent to the socket
+            when 'update'
+              tubesock.onmessage do |m|
+                set_resource_params(m)
+                execute_action(tubesock, block)
 
-          # If the controller's action name is 'create', a record should be
-          # created. Before yielding, the params hash has to be prepared
-          # with attributes sent to the socket. The actual publishing
-          # happens in the model's callback
-          when 'create'
-            tubesock.onmessage do |m|
-              set_resource_params(m)
-              yield
+                # Send resource that was just updated back to client. The resource
+                # on the client will be overridden with this one. This is important
+                # so that the new updated_at and possibly other attributes arrive
+                # on the client
+                if member
+                  tubesock.send_data({
+                    resource: member
+                  }.to_json)
+                end
 
-              # Send resource that was just created back to client. The resource
-              # on the client will be overridden with this one. This is important
-              # so that the id, created_at and updated_at and possibly other
-              # attributes arrive on the client
-              if member
-                tubesock.send_data({
-                  resource: member
-                }.to_json)
+                close_db_connection
               end
 
-              close_db_connection
-            end
+            when 'destroy'
+              tubesock.onmessage do |m|
+                execute_action(tubesock, block)
 
-          # If the controller's action name is 'update', a record should be
-          # updated. Before yielding, the params hash has to be prepared
-          # with attributes sent to the socket
-          when 'update'
-            tubesock.onmessage do |m|
-              set_resource_params(m)
-              yield
+                # Send resource that was just destroyed back to client
+                if member
+                  tubesock.send_data({
+                    resource: member
+                  }.to_json)
+                end
 
-              # Send resource that was just updated back to client. The resource
-              # on the client will be overridden with this one. This is important
-              # so that the new updated_at and possibly other attributes arrive
-              # on the client
-              if member
-                tubesock.send_data({
-                  resource: member
-                }.to_json)
+                close_db_connection
               end
 
-              close_db_connection
-            end
+            # For every other controller action, simply wrap whatever is
+            # yielded in the tubesock block to execute it in the context
+            # of the socket. Other custom actions can be added through this
+            else
+              tubesock.onmessage do |m|
+                # If message was sent, attach to params (rescue exception if
+                # message not valid JSON or message not present)
+                params.merge!(JSON.parse(m)) rescue nil
 
-          when 'destroy'
-            tubesock.onmessage do |m|
-              yield
+                execute_action(tubesock, block)
 
-              # Send resource that was just destroyed back to client
-              if member
-                tubesock.send_data({
-                  resource: member
-                }.to_json)
+                close_db_connection
               end
-
-              close_db_connection
             end
-
-          # For every other controller action, simply wrap whatever is
-          # yielded in the tubesock block to execute it in the context
-          # of the socket. Other custom actions can be added through this
-          else
-            tubesock.onmessage do |m|
-              # If message was sent, attach to params (rescue exception if
-              # message not valid JSON or message not present)
-              params.merge!(JSON.parse(m)) rescue nil
-
-              yield
-
-              close_db_connection
-            end
+          rescue Exception => e
+            Rails.logger.error e
+            close_db_connection
           end
         end
       end
 
       def set_resource_params(message_from_socket)
         params[resource_name.to_sym] = JSON.parse(message_from_socket)
+      end
+
+      # Run the actual controller action that is passed as
+      # a block to the broadcast method and catch any exceptions
+      # as needed
+      def execute_action(tubesock, block)
+        begin
+          # Execute block
+          block.call
+        rescue Exception => e
+          # Log the error
+          Rails.logger.error e.message
+
+          # Print stack strace
+          puts e.backtrace
+
+          # Send error message to client
+          tubesock.send_data({
+            error: e.message
+          }.to_json)
+        end
       end
     end
     
