@@ -272,6 +272,7 @@ The following versions are compatible:
 
 | entangled.gem | entangled-js.js | entangled-angular.js |
 |---------------|-----------------|----------------------|
+| 1.5.0         | 1.4.0           | 1.4.0                |
 | 1.4.1         | 1.3.1           | 1.3.1                |
 | 1.4.1         | 1.3.0           | 1.3.0                |
 

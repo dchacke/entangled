@@ -3,7 +3,7 @@ angular.module('entangled', [])
 
 // Register service and call it 'Entangled'
 .factory('Entangled', function() {
-  return function() {
+  var Entangled = function() {
     // Every response coming from the server will be wrapped
     // in a Resource constructor to represent a CRUD-able
     // resource that can be saved and destroyed using the
