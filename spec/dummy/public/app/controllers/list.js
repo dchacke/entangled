@@ -3,10 +3,10 @@
 angular.module('entangledTest')
 
 .controller('ListCtrl', function($scope, $routeParams, List) {
-  List.find($routeParams.id, function(list) {
+  List.find($routeParams.id, function(err, list) {
     $scope.$apply(function() {
       $scope.list = list;
-      $scope.list.items().all(function(items) {
+      $scope.list.items().all(function(err, items) {
         $scope.$apply(function() {
           $scope.items = items;
         });
