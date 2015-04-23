@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.version       = Entangled::VERSION
   s.authors       = ["Dennis Charles Hackethal"]
   s.email         = ["dennis.hackethal@gmail.com"]
-  s.summary       = %q{Makes Rails real time through websockets.}
-  s.description   = %q{Makes Rails real time through websockets as a gem in the backend and as an Angular library in the front end.}
+  s.summary       = %q{Non-blocking real time behavior for Rails}
+  s.description   = %q{Non-blocking real time behavior for Rails}
   s.homepage      = "https://github.com/dchacke/entangled"
   s.license       = "MIT"
 
