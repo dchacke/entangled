@@ -586,6 +586,16 @@ describe('Entangled', function() {
           });
         });
       });
+
+      it('receives an error when the parent id is not set', function(done) {
+        var item = Item.new();
+
+        item.list(function(err, list) {
+          expect(err.message).toBe("Couldn't find List with 'id'=undefined");
+          expect(list).not.toBeDefined();
+          done();
+        });
+      });
     });
   });
 });

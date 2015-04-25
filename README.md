@@ -301,7 +301,6 @@ More information [here](http://www.thenerdary.net/post/24889968081/debugging-web
 ## Development Priorities
 The following features are to be implemented next:
 
-- Throw error if parent id not set on child when trying to fetch parent
 - Support multiple `hasMany` and `belongsTo` associations in front end
 - Put up example application (the todo list?)
 - Make prefix of create path `create_message` instead of `create_messages`
