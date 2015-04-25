@@ -313,7 +313,7 @@ The following features are to be implemented next:
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
 - Add `$onChange` method to objects
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
-- Add `.destroyAll()` method to `Resources`
+- Add `.destroyAll()` method
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
