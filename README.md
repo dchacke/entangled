@@ -312,18 +312,15 @@ The following features are to be implemented next:
 - Add offline capabilities, i.e. only dequeue server interactions once internet connection established
 - Add authentication - with JWT?
 - On Heroku, tasks are always in different order depending on which ones are checked off and not
-- Add `$onChange` function to objects - or could a simple $watch and $watchCollection suffice?
-- Add diagram on how it works to Readme
-- GNU instead of MIT? Or something else? How to switch?
-- Contact Jessy to tweet about it!
+- Add `$onChange` method to objects
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
-- Add `.destroyAll()` function to `Resources`
+- Add `.destroyAll()` method to `Resources`
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
 2. Run `$ bundle install` in the root of the repo
 3. Run `$ bower install` and `$ npm install` in spec/dummy/public
-4. The back end example app resides in spec/dummy. You can run `rails` and `rake` commands in there if you prefix them with `bin/`, i.e. `$ bin/rails s` or `$ bin/rake db:schema:load`. Run your Rails tests in the root of the repo by running `$ rspec`
+4. The back end example app resides in spec/dummy. You can run `rails` and `rake` commands in there if you prefix them with `bin/`, e.g. `$ bin/rails s` or `$ bin/rake db:schema:load`. Run your Rails tests in the root of the repo by running `$ rspec`
 5. The front end example app resides in spec/dummy/public. To look at it in your browser, cd into spec/dummy/public and run `$ bin/rails s`. Tests for this part of the app can be located under spec/dummy/public/test and are written with Jasmine. To run the tests, first run `$ bin/rails -e test` to start up the server in test mode, and then run `$ grunt test` in a new terminal tab. It's important to remember that changes you make to the server will not take effect until you restart the server since you're running it in the test environment. Also remember to prepare the test database by running `$ bin/rake db:test:prepare`
 6. The Entangled Angular service resides in spec/dummy/public/app/entangled/entangled.js. This is where you can make changes to the service. A copy of it, living in /entangled.js at the root of the repo, should be kept in sync for it to be available with Bower. Once you're done editing spec/dummy/public/app/entangled/entangled.js, copy it over to /entangled.js
 7. Write your tests. Test coverage is required
