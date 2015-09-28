@@ -306,6 +306,7 @@ The following features are to be implemented next:
 - Support `has_one` associations in back end and front end and route helper for single resource
 - Support scoping in back end
 - Add support for scopes and where clauses in front end once back end can do scopes à la [Spyke](https://github.com/balvig/spyke)
+- Add ability to configure options, such as to specify which Redis instance to use, in initializer through a config block; see need and example [here](https://github.com/dchacke/entangled/pull/229)
 - Display results of interactions to client immediately without going through the server; add server interactions to queue and constantly dequeue; if result from server conflicts with client state, update client accordingly
 - Add offline capabilities, i.e. only dequeue server interactions once internet connection established
 - Add authentication - with JWT?
