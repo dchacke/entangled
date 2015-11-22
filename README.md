@@ -98,7 +98,7 @@ entangle only: :create
 entangle only: [:create, :update]
 ```
 
-Calling `entangled` creates the following channels (sticking with the example of a `Message` model):
+Calling `entangle` creates the following channels (sticking with the example of a `Message` model):
 
 ```ruby
 # For the collection
