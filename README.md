@@ -17,7 +17,9 @@ gem 'entangled'
 
 Note that Redis and Puma are required as well. Redis is needed to build the channels clients subscribe to, Puma is needed to handle websockets concurrently.
 
-Entangled comes with Redis, but you need to add Puma to your Gemfile:
+You need to [install Redis](http://redis.io/download) if you haven't yet. Entangled comes with a [Ruby client for Redis](https://rubygems.org/gems/redis) that will connect to your Redis instance once it's installed.
+
+You also need to add Puma to your Gemfile:
 
 ```ruby
 gem 'puma'
@@ -26,10 +28,6 @@ gem 'puma'
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install entangled
 
 ## Usage
 Entangled is needed in three parts of your app: Routes, models, and controllers. Given the example of a `MessagesController` and a `Message` model for a chat app, you will need:
@@ -100,7 +98,7 @@ entangle only: :create
 entangle only: [:create, :update]
 ```
 
-Calling `entangled` creates the following channels (sticking with the example of a `Message` model):
+Calling `entangle` creates the following channels (sticking with the example of a `Message` model):
 
 ```ruby
 # For the collection
