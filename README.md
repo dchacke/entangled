@@ -29,10 +29,6 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install entangled
-
 ## Usage
 Entangled is needed in three parts of your app: Routes, models, and controllers. Given the example of a `MessagesController` and a `Message` model for a chat app, you will need:
 
