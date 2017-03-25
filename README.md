@@ -2,6 +2,8 @@
 
 [![Codeship Status for dchacke/entangled](https://codeship.com/projects/9fe9a790-9df7-0132-5fb8-6e77ea26735b/status?branch=master)](https://codeship.com/projects/64679)
 
+**This project is not actively maintained at the moment.**
+
 Real time is important. Users have come to expect real time behavior from every website, because they want to see the latest data without having to reload the page. Real time increases their engagement, provides better context for the data they're seeing, and makes collaboration easier.
 
 Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
@@ -302,7 +304,7 @@ The following features are to be implemented next:
 - Support multiple `hasMany` and `belongsTo` associations in front end
 - Make prefix of create path `create_message` instead of `create_messages`
 - Support `has_one` associations in back end and front end and route helper for single resource
-- Support scoping in back end
+- Support scoping in back end (see https://github.com/dchacke/entangled-angular/issues/4)
 - Add support for scopes and where clauses in front end once back end can do scopes à la [Spyke](https://github.com/balvig/spyke)
 - Add ability to configure options, such as to specify which Redis instance to use, in initializer through a config block; see need and example [here](https://github.com/dchacke/entangled/pull/229)
 - Display results of interactions to client immediately without going through the server; add server interactions to queue and constantly dequeue; if result from server conflicts with client state, update client accordingly
@@ -313,6 +315,7 @@ The following features are to be implemented next:
 - Test controllers (see https://github.com/ngauthier/tubesock/issues/41)
 - Add `.destroyAll()` method
 - Support custom actions in front end (see https://github.com/dchacke/entangled-angular/issues/1)
+- Use only one socket for everything
 
 ## Contributing
 1. [Fork it](https://github.com/dchacke/entangled/fork) - you will notice that the repo comes with a back end and a front end part to test both parts of the gem
