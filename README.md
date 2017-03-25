@@ -2,6 +2,8 @@
 
 [![Codeship Status for dchacke/entangled](https://codeship.com/projects/9fe9a790-9df7-0132-5fb8-6e77ea26735b/status?branch=master)](https://codeship.com/projects/64679)
 
+**This project is not actively maintained at the moment.**
+
 Real time is important. Users have come to expect real time behavior from every website, because they want to see the latest data without having to reload the page. Real time increases their engagement, provides better context for the data they're seeing, and makes collaboration easier.
 
 Entangled stores and syncs data from ActiveRecord instantly across every device. It is a layer behind your models and controllers that pushes updates to all connected clients in real time. It is cross-browser compatible and offers real time validations.
